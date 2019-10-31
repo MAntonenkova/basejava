@@ -6,19 +6,21 @@ import java.util.stream.Stream;
  */
 public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
+    private int size = size();
 
     void clear() {
-        for (int i = 0; i < size() ; i++) {
+        for (int i = 0; i < size; i++) {
             storage[i] = null;
         }
     }
 
     void save(Resume resume) {
-        storage[size()] = resume;
+        storage[size] = resume;
+        size++;
     }
 
     Resume get(String uuid) {
-        for (int i = 0; i < size() ; i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)) {
                 return storage[i];
             }
@@ -27,17 +29,18 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        for (int i = 0; i < size() ; i++) {
+        for (int i = 0; i < size; i++) {
             if ((storage[i].uuid.equals(uuid))) {
-                storage[i] = null;
+                storage[i] = storage[size - 1];
+                size--;
             }
         }
     }
 
     Resume[] getAll() {
-        Resume[] getAllResume = new Resume[size()];
-        if (size() - 1 >= 0) System.arraycopy(storage, 0, getAllResume, 0, size() - 1);
-        return getAllResume;
+        Resume[] AllResumes = new Resume[size];
+        System.arraycopy(storage, 0, AllResumes, 0, size);
+        return AllResumes;
     }
 
     int size() {
