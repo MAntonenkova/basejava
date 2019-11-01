@@ -32,7 +32,9 @@ public class ArrayStorage {
         for (int i = 0; i < size; i++) {
             if ((storage[i].uuid.equals(uuid))) {
                 storage[i] = storage[size - 1];
+                storage[size - 1] = null;
                 size--;
+                break;
             }
         }
     }
@@ -44,12 +46,6 @@ public class ArrayStorage {
     }
 
     int size() {
-        int counter = 0;
-        for (int i = 0; i < 10000; i++) {
-            if (storage[i] != null) {
-                counter++;
-            }
-        }
-        return counter;
+        return size;
     }
 }
