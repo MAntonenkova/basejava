@@ -87,9 +87,6 @@ public class ArrayStorage {
     }
 
     public boolean elementIsInStorage(int i){
-        if (i == -1){
-            return false;
-        }
-        return true;
+        return i!= -1;
     }
 }
