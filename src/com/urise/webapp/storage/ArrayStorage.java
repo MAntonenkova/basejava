@@ -37,7 +37,6 @@ public class ArrayStorage {
         }
     }
 
-
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index != -1) {
