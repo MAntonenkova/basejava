@@ -29,8 +29,8 @@ public class ArrayStorage {
         int index = getIndex(resume.getUuid());
         if (index!= -1){
             System.out.println("Resume is already in base");
-        } else if (getSize() < storage.length) {
-                storage[getSize()] = resume;
+        } else if (size < storage.length) {
+                storage[size] = resume;
                 size++;
         } else {
                 System.out.println("Stack is overflow!");
@@ -78,9 +78,5 @@ public class ArrayStorage {
             }
         }
         return -1;
-    }
-
-    private boolean elementIsInStorage(int i){
-        return i!= -1;
     }
 }
