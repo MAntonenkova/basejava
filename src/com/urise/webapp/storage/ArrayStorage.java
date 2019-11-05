@@ -12,55 +12,49 @@ public class ArrayStorage {
     private int size;
 
     public void clear() {
-        Arrays.fill(getAll(), null);
+        Arrays.fill(storage,0, size, null);
         size = 0;
     }
 
     public void update(Resume resume) {
-        int i = findElementInStorage(resume.getUuid());
-        if (elementIsInStorage(i)){
-            storage[i] = resume;
-        }
-        else {
+        int index = getIndex(resume.getUuid());
+        if (index!= -1){
+            storage[index] = resume;
+        } else {
             resumeAbsentMessage();
         }
     }
 
     public void save(Resume resume) {
-        int i = findElementInStorage(resume.getUuid());
-        if (elementIsInStorage(i)){
+        int index = getIndex(resume.getUuid());
+        if (index!= -1){
             System.out.println("Resume is already in base");
-        }
-        else {
-            if (getSize() < storage.length) {
+        } else if (getSize() < storage.length) {
                 storage[getSize()] = resume;
                 size++;
-            } else {
+        } else {
                 System.out.println("Stack is overflow!");
             }
         }
-    }
+
 
     public Resume get(String uuid) {
-        int i = findElementInStorage(uuid);
-        if (elementIsInStorage(i)){
-            return storage[i];
-        }
-        else {
+        int index = getIndex(uuid);
+        if (index!= -1){
+            return storage[index];
+        } else {
             resumeAbsentMessage();
         }
         return null;
     }
 
     public void delete(String uuid) {
-        // check if resume present
-        int i = findElementInStorage(uuid);
-        if (elementIsInStorage(i)) {
-            storage[i] = storage[size - 1];
+        int index = getIndex(uuid);
+        if (index!= -1) {
+            storage[index] = storage[size - 1];
             storage[size - 1] = null;
             size--;
-        }
-        else {
+        } else {
             resumeAbsentMessage();
         }
     }
@@ -73,11 +67,11 @@ public class ArrayStorage {
         return size;
     }
 
-    public void resumeAbsentMessage() {
+    private void resumeAbsentMessage() {
         System.out.println("Resume is absent in base");
     }
 
-    public int findElementInStorage(String uuid) {
+    private int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
@@ -86,7 +80,7 @@ public class ArrayStorage {
         return -1;
     }
 
-    public boolean elementIsInStorage(int i){
+    private boolean elementIsInStorage(int i){
         return i!= -1;
     }
 }
