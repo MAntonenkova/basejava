@@ -12,13 +12,13 @@ public class ArrayStorage {
     private int size;
 
     public void clear() {
-        Arrays.fill(storage,0, size, null);
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
-        if (index!= -1){
+        if (index != -1) {
             storage[index] = resume;
         } else {
             resumeAbsentMessage();
@@ -27,30 +27,28 @@ public class ArrayStorage {
 
     public void save(Resume resume) {
         int index = getIndex(resume.getUuid());
-        if (index!= -1){
+        if (index != -1) {
             System.out.println("Resume is already in base");
         } else if (size < storage.length) {
-                storage[size] = resume;
-                size++;
+            storage[size] = resume;
+            size++;
         } else {
-                System.out.println("Stack is overflow!");
-            }
+            System.out.println("Stack is overflow!");
         }
+    }
 
 
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-        if (index!= -1){
+        if (index != -1) {
             return storage[index];
-        } else {
-            resumeAbsentMessage();
         }
         return null;
     }
 
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (index!= -1) {
+        if (index != -1) {
             storage[index] = storage[size - 1];
             storage[size - 1] = null;
             size--;
