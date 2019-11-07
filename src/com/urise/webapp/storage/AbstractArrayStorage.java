@@ -71,4 +71,5 @@ public abstract class AbstractArrayStorage implements Storage {
     protected abstract void deleteZeroInTheMiddle(int index);
 
     protected abstract void putElementIntoStorage(Resume resume);
+
 }
