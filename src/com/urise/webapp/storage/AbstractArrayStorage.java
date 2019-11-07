@@ -8,13 +8,34 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public abstract class AbstractArrayStorage implements Storage {
-    protected static final int STORAGE_LIMIT = 10_000;
+    private static final int STORAGE_LIMIT = 10_000;
 
-    protected Resume[] storage = new Resume[STORAGE_LIMIT];
-    protected int size = 0;
+    Resume[] storage = new Resume[STORAGE_LIMIT];
+    int size = 0;
 
-    public int getSize() {
-        return size;
+    public void clear() {
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
+    }
+
+    public void update(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (index != -1) {
+            storage[index] = resume;
+        } else {
+            System.out.println("Resume is absent in base");
+        }
+    }
+
+    public void save(Resume resume) {
+        if (getIndex(resume.getUuid()) >= 0) {
+            System.out.println("Resume" + resume.getUuid() + " is already in base");
+        } else if (size < STORAGE_LIMIT) {
+            putElementIntoStorage(resume);
+            size++;
+        } else {
+            System.out.println("Storage is overflow!");
+        }
     }
 
     public Resume get(String uuid) {
@@ -25,5 +46,29 @@ public abstract class AbstractArrayStorage implements Storage {
         return null;
     }
 
+    @Override
+    public void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index != -1) {
+            deleteZeroInTheMiddle(index);
+            storage[size - 1] = null;
+            size--;
+        } else {
+            System.out.println("Resume is absent in base");
+        }
+    }
+
+    public Resume[] getAll() {
+        return Arrays.copyOfRange(storage, 0, size);
+    }
+
+    public int getSize() {
+        return size;
+    }
+
     protected abstract int getIndex(String uuid);
+
+    protected abstract void deleteZeroInTheMiddle(int index);
+
+    protected abstract void putElementIntoStorage(Resume resume);
 }
