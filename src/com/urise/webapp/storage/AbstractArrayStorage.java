@@ -31,7 +31,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (getIndex(resume.getUuid()) >= 0) {
             System.out.println("Resume" + resume.getUuid() + " is already in base");
         } else if (size < STORAGE_LIMIT) {
-            putElementIntoStorage(resume);
+            insert(resume, findIndex(resume));
             size++;
         } else {
             System.out.println("Storage is overflow!");
@@ -50,7 +50,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index != -1) {
-            deleteZeroInTheMiddle(index);
+            remove(index);
             storage[size - 1] = null;
             size--;
         } else {
@@ -68,8 +68,12 @@ public abstract class AbstractArrayStorage implements Storage {
 
     protected abstract int getIndex(String uuid);
 
-    protected abstract void deleteZeroInTheMiddle(int index);
+    protected abstract void remove(int index);
 
-    protected abstract void putElementIntoStorage(Resume resume);
+  //  protected abstract void insert(Resume resume);
+
+    protected abstract void insert(Resume resume, int index);
+
+    protected abstract int findIndex(Resume resume);
 
 }

@@ -16,18 +16,19 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void deleteZeroInTheMiddle(int index) {
+    protected void remove (int index) {
         if (size + 1 - index >= 0) System.arraycopy(storage, index + 1, storage, index, size + 1 - index);
     }
 
     @Override
-    protected void putElementIntoStorage(Resume resume) {
-        int index = findIndexInSortedArray(resume);
+    protected void insert(Resume resume, int index) {
+     //   int index = findIndex(resume);
         if (size - 1 - index >= 0) System.arraycopy(storage, index, storage, index + 1, size - 1 - index);
         storage[index] = resume;
     }
 
-    private int findIndexInSortedArray(Resume resume) {
+    @Override
+    protected int findIndex(Resume resume) {
         int mid;
         int left = 0;
         int right = size;
