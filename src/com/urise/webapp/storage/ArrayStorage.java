@@ -26,11 +26,6 @@ public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected void insert(Resume resume, int index) {
-        storage[index] = resume;
-    }
-
-    @Override
-    protected int findIndex(Resume resume) {
-        return size;
+        storage[size] = resume;
     }
 }
