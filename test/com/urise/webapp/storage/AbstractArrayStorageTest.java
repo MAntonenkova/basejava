@@ -14,17 +14,17 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 public abstract class AbstractArrayStorageTest {
-    Storage storage;
+    private Storage storage;
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private Resume resume;
     private Resume resume4;
-    Resume [] storageNew;
+    private Resume [] storageNew;
 
 
-    public AbstractArrayStorageTest(Storage storage) {
+    AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
     }
 
