@@ -28,6 +28,4 @@ public class ArrayStorage extends AbstractArrayStorage {
     protected void insertElement(Resume resume, int index) {
         storage[size] = resume;
     }
-
-
 }

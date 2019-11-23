@@ -11,7 +11,7 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public abstract class AbstractArrayStorage extends AbstractStorage {
-    protected static final int STORAGE_LIMIT = 10_000;
+    static final int STORAGE_LIMIT = 10_000;
 
     Resume[] storage = new Resume[STORAGE_LIMIT];
     int size = 0;
@@ -22,12 +22,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public  void updateResume(int index, Resume resume){
+    public void updateResume(int index, Resume resume) {
         storage[index] = resume;
     }
 
     @Override
-    public  void saveResume(int index, Resume resume){
+    public void saveResume(int index, Resume resume) {
         if (size < STORAGE_LIMIT) {
             insertElement(resume, index);
             size++;
@@ -37,7 +37,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void deleteResume(int index){
+    public void deleteResume(int index) {
         fillDeletedElement(index);
         storage[size - 1] = null;
         size--;

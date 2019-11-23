@@ -16,12 +16,12 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public  void updateResume(int index, Resume resume){
+    public void updateResume(int index, Resume resume) {
         arrayList.set(index, resume);
     }
 
     @Override
-    public  void saveResume(int index, Resume resume){
+    public void saveResume(int index, Resume resume) {
         if (index >= 0) {
             throw new ExistStorageException(resume.getUuid());
         } else {
@@ -30,7 +30,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void deleteResume(int index){
+    public void deleteResume(int index) {
         arrayList.remove(index);
     }
 
@@ -43,7 +43,7 @@ public class ListStorage extends AbstractStorage {
         return arrayList.get(index);
     }
 
-    public  Resume[] getAll() {
+    public Resume[] getAll() {
         return null;
     }
 
