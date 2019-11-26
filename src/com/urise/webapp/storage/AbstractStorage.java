@@ -1,24 +1,15 @@
 package com.urise.webapp.storage;
 
-
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-
-import java.util.Arrays;
-
-import static com.urise.webapp.storage.AbstractArrayStorage.STORAGE_LIMIT;
 
 public abstract class AbstractStorage implements Storage {
 
-    public abstract void clear();
-
     @Override
     public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            updateResume(index, resume);
+        if (elementExist(resume)) {
+            updateResume(resume);
         } else {
             throw new NotExistStorageException(resume.getUuid());
         }
@@ -26,36 +17,42 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
+        if (elementExist(resume)) {
             throw new ExistStorageException(resume.getUuid());
         } else {
-            saveResume(index, resume);
+            saveResume(resume);
         }
     }
 
     @Override
     public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            deleteResume(index);
-
+        if (elementExist(uuid)) {
+            deleteResume(uuid);
         } else {
             throw new NotExistStorageException(uuid);
         }
     }
 
-    public abstract void updateResume(int index, Resume resume);
+    @Override
+    public Resume get(String uuid) {
+        if (elementExist(uuid)) {
+            return getElement(uuid);
+        } else {
+            throw new NotExistStorageException(uuid);
+        }
+    }
 
-    public abstract void saveResume(int index, Resume resume);
+    public abstract void updateResume(Resume resume);
 
-    public abstract void deleteResume(int index);
+    public abstract void saveResume(Resume resume);
 
-    public abstract Resume get(String uuid);
+    public abstract void deleteResume(String uuid);
 
-    public abstract Resume[] getAll();
+    public abstract boolean elementExist(Resume resume);
 
-    public abstract int getSize();
+    public abstract boolean elementExist(String uuid);
+
+    public abstract Resume getElement(String uuid);
 
     protected abstract int getIndex(String uuid);
 
