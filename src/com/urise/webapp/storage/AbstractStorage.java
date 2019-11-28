@@ -8,8 +8,9 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        if (elementExist(resume)) {
-            updateResume(resume);
+        int index = getIndex(resume.getUuid());
+        if (index >= 0) {
+            updateResume(resume, index);
         } else {
             throw new NotExistStorageException(resume.getUuid());
         }
@@ -17,17 +18,29 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        if (elementExist(resume)) {
+        int index = getIndex(resume.getUuid());
+        if (index >= 0) {
             throw new ExistStorageException(resume.getUuid());
         } else {
-            saveResume(resume);
+            saveResume(resume, index);
         }
     }
 
-    @Override
+ /*   @Override
     public void delete(String uuid) {
+        int index = getIndex(uuid);
         if (elementExist(uuid)) {
             deleteResume(uuid);
+        } else {
+            throw new NotExistStorageException(uuid);
+        }
+    }*/
+
+    @Override
+    public void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index >= 0) {
+            deleteResume(uuid, index);
         } else {
             throw new NotExistStorageException(uuid);
         }
@@ -35,24 +48,25 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        if (elementExist(uuid)) {
-            return getElement(uuid);
+        int index = getIndex(uuid);
+        if (index >= 0) {
+            return getElement(index);      // getElement - убрать uuid?
         } else {
             throw new NotExistStorageException(uuid);
         }
     }
 
-    public abstract void updateResume(Resume resume);
+    public abstract void updateResume(Resume resume, int index);
 
-    public abstract void saveResume(Resume resume);
+    public abstract void saveResume(Resume resume, int index);
 
-    public abstract void deleteResume(String uuid);
+    public abstract void deleteResume(String uuid, int index);
 
-    public abstract boolean elementExist(Resume resume);
+    //  public abstract boolean elementExist(Resume resume);
 
-    public abstract boolean elementExist(String uuid);
+    //   public abstract boolean elementExist(String uuid);
 
-    public abstract Resume getElement(String uuid);
+    public abstract Resume getElement(int index);
 
     protected abstract int getIndex(String uuid);
 
