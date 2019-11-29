@@ -17,7 +17,6 @@ public class ListStorage extends AbstractStorage {
 
 
     public void updateResume(Resume resume, int index) {
-        // int index = getIndex(resume.getUuid());
         arrayList.set(index, resume);
     }
 
@@ -27,7 +26,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void deleteResume(String uuid, int index) {
+    public void deleteResume(int index) {
         arrayList.remove(index);
     }
 
@@ -40,22 +39,18 @@ public class ListStorage extends AbstractStorage {
         return arrayList.size();
     }
 
-    /* @Override
-     public boolean elementExist(Resume resume){
-         return getIndex(resume.getUuid()) >=0;
-     }
-
-     @Override
-     public boolean elementExist(String uuid){
-         return getIndex(uuid)>=0;
-     }
- */
     @Override
     public int getIndex(String uuid) {
-        return arrayList.indexOf(get(uuid));
+        for (Resume r : arrayList) {
+            if (r.getUuid().equals(uuid)) {
+                return arrayList.indexOf(r);
+            }
+        }
+        return -1;
     }
 
-    public Resume getElement(int index) {
+    public Resume getResume(int index) {
         return arrayList.get(index);
     }
+
 }

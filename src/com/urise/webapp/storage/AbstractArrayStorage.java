@@ -23,13 +23,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     public void updateResume(Resume resume, int index) {
-        //  int index = getIndex(resume.getUuid());
         storage[index] = resume;
     }
 
     @Override
     public void saveResume(Resume resume, int index) {
-        //  int index = getIndex(resume.getUuid());
         if (size < STORAGE_LIMIT) {
             insertElement(resume, index);
             size++;
@@ -39,29 +37,16 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void deleteResume(String uuid, int index) {
-        // int index = getIndex(uuid);
+    public void deleteResume(int index) {
         fillDeletedElement(index);
         storage[size - 1] = null;
         size--;
     }
 
     @Override
-    public Resume getElement(int index) {
+    public Resume getResume(int index) {
         return storage[index];
     }
-
-/*    @Override
-    public boolean elementExist(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        return index >= 0;
-    }*/
-
-    /*@Override
-    public boolean elementExist(String uuid) {
-        int index = getIndex(uuid);
-        return index >= 0;
-    }*/
 
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
@@ -75,4 +60,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract void fillDeletedElement(int index);
 
     protected abstract void insertElement(Resume resume, int index);
+
+
+
 }
