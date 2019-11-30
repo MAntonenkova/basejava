@@ -8,9 +8,9 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            updateResume(resume, index);
+        Object key = getIndex(resume.getUuid());
+        if (isExist(key)) {
+            updateResume(resume, key);
         } else {
             throw new NotExistStorageException(resume.getUuid());
         }
@@ -18,19 +18,19 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
+        Object key = getIndex(resume.getUuid());
+        if (isExist(key)) {
             throw new ExistStorageException(resume.getUuid());
         } else {
-            saveResume(resume, index);
+            saveResume(resume, key);
         }
     }
 
     @Override
     public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            deleteResume(index);
+        Object key = getIndex(uuid);
+        if (isExist(key)) {
+            deleteResume(key);
         } else {
             throw new NotExistStorageException(uuid);
         }
@@ -38,22 +38,24 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            return getResume(index);
+        Object key = getIndex(uuid);
+        if (isExist(key)) {
+            return getResume(key);
         } else {
             throw new NotExistStorageException(uuid);
         }
     }
 
-    public abstract void updateResume(Resume resume, int index);
+    public abstract void updateResume(Resume resume, Object object);
 
-    public abstract void saveResume(Resume resume, int index);
+    public abstract void saveResume(Resume resume, Object object);
 
-    public abstract void deleteResume(int index);
+    public abstract void deleteResume(Object object);
 
-    public abstract Resume getResume(int index);
+    public abstract Resume getResume(Object object);
 
-    protected abstract int getIndex(String uuid);
+    protected abstract Object getIndex(String uuid);
+
+    public abstract boolean isExist(Object object);
 
 }

@@ -13,19 +13,22 @@ public class MapStorage extends AbstractStorage {
         hashMap.clear();
     }
 
-
-    public void updateResume(Resume resume, int index) {
-        hashMap.put(resume.getUuid(), resume);
+    public void updateResume(Resume resume, Object object) {
+        hashMap.put((String)object, resume);
     }
 
     @Override
-    public void saveResume(Resume resume, int index) {
-        hashMap.put(resume.getUuid(), resume);
+    public void saveResume(Resume resume, Object object) {
+        hashMap.put((String)object, resume);
     }
 
     @Override
-    public void deleteResume(int index) {
-
+    public void deleteResume(Object object) {
+        for (Map.Entry<String, Resume> entry: hashMap.entrySet()){
+            if (entry.getKey().equals(object)){
+                hashMap.remove(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     public Resume[] getAll() {
@@ -38,12 +41,24 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public int getIndex(String uuid) {
-        return uuid.hashCode();
+    public Object getIndex(String uuid) {
+        return uuid;
     }
 
-    public Resume getResume(int index) {
-      return null;
+    public Resume getResume(Object object) {
+        for (Map.Entry<String, Resume> entry: hashMap.entrySet()){
+            if (entry.getKey().equals(object)){
+                return entry.getValue();
+            }
+        } return null;
     }
 
+    public  boolean isExist(Object object){
+        for (Map.Entry<String, Resume> entry: hashMap.entrySet()){
+            if (entry.getKey().equals(object)){
+                return true;
+            }
+        }
+        return false;
+    }
 }
