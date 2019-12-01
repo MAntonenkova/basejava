@@ -24,11 +24,14 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     public void deleteResume(Object object) {
-        for (Map.Entry<String, Resume> entry: hashMap.entrySet()){
+        String key = (String)object;
+        hashMap.remove(key);
+
+        /*for (Map.Entry<String, Resume> entry: hashMap.entrySet()){
             if (entry.getKey().equals(object)){
                 hashMap.remove(entry.getKey(), entry.getValue());
             }
-        }
+        }*/
     }
 
     public Resume[] getAll() {
@@ -46,19 +49,24 @@ public class MapStorage extends AbstractStorage {
     }
 
     public Resume getResume(Object object) {
-        for (Map.Entry<String, Resume> entry: hashMap.entrySet()){
+        String key = (String)object;
+       /* for (Map.Entry<String, Resume> entry: hashMap.entrySet()){
             if (entry.getKey().equals(object)){
                 return entry.getValue();
             }
-        } return null;
+        }*/
+       return hashMap.get(key);
     }
 
     public  boolean isExist(Object object){
-        for (Map.Entry<String, Resume> entry: hashMap.entrySet()){
+        String key = (String)object;
+
+        return hashMap.containsKey(key);
+      /*  for (Map.Entry<String, Resume> entry: hashMap.entrySet()){
             if (entry.getKey().equals(object)){
                 return true;
             }
-        }
-        return false;
+        }*/
+       
     }
 }
