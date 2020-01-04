@@ -1,6 +1,5 @@
 package com.urise.webapp;
 
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
 import com.urise.webapp.model.Resume;
 
 import java.lang.reflect.Field;

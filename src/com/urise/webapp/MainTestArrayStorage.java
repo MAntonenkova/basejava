@@ -12,11 +12,11 @@ public class MainTestArrayStorage {
 
     public static void main(String[] args) {
         final Resume r1 = new Resume("uuid1");
-   //     r1.setUuid("uuid1");
+        //     r1.setUuid("uuid1");
         final Resume r2 = new Resume("uuid2");
-     //   r2.setUuid("uuid2");
+        //   r2.setUuid("uuid2");
         Resume r3 = new Resume("uuid3");
-     //   r3.setUuid("uuid3");
+        //   r3.setUuid("uuid3");
 
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);
@@ -27,19 +27,19 @@ public class MainTestArrayStorage {
 
         System.out.println("Get dummy: " + ARRAY_STORAGE.get("dummy"));
 
-        printAll();
+     //   printAll();
         ARRAY_STORAGE.delete("uuid");
-        printAll();
+     //   printAll();
         ARRAY_STORAGE.clear();
-        printAll();
+  //      printAll();
 
         System.out.println("Size: " + ARRAY_STORAGE.getSize());
     }
 
-    private static void printAll() {
+   /* private static void printAll() {
         System.out.println("\nGet All");
         for (Resume r : ARRAY_STORAGE.getAll()) {
             System.out.println(r);
         }
-    }
+    }*/
 }

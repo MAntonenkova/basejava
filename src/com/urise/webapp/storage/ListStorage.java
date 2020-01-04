@@ -8,52 +8,51 @@ import com.urise.webapp.model.Resume;
 import java.util.*;
 
 public class ListStorage extends AbstractStorage {
-    private List<Resume> arrayList = new ArrayList<>();
+    private List<Resume> list = new ArrayList<>();
 
     @Override
     public void clear() {
-        arrayList.clear();
+        list.clear();
     }
 
-
-    public void updateResume(Resume resume, Object object) {
-        arrayList.set((int)object, resume);
-    }
-
-    @Override
-    public void saveResume(Resume resume, Object object) {
-        arrayList.set((int)object, resume);
+    public void doUpdate(Resume resume, Object searchKey) {
+        list.set((Integer) searchKey, resume);
     }
 
     @Override
-    public void deleteResume(Object object) {
-        arrayList.remove((int)object);
+    public void doSave(Resume resume, Object searchKey) {
+        list.add( resume);
     }
 
-    public Resume[] getAll() {
-        return arrayList.toArray(new Resume[getSize()]);
+    @Override
+    public void doDelete(Object searchKey) {
+        list.remove(((Integer)searchKey).intValue());
+    }
+
+    public List<Resume> getAllSorted() {
+        return list.subList(0, getSize());
     }
 
     @Override
     public int getSize() {
-        return arrayList.size();
+        return list.size();
     }
 
     @Override
-    public Object getIndex(String uuid) {
-        for (Resume r : arrayList) {
-            if (r.getUuid().equals(uuid)) {
-                return arrayList.indexOf(r);
+    public Integer getSearchKey(String uuid) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUuid().equals(uuid)) {
+                return i;
             }
         }
-        return -1;
+        return null;
     }
 
-    public Resume getResume(Object object) {
-        return arrayList.get((int)object);
+    public Resume doGet(Object index) {
+        return list.get((Integer) index);
     }
 
-    public  boolean isExist(Object object){
-        return (int)object >= 0;
+    public boolean isExist(Object searchKey) {
+        return searchKey != null;
     }
 }

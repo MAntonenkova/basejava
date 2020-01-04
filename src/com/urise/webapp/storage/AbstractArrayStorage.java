@@ -1,11 +1,9 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Array based storage for Resumes
@@ -22,14 +20,14 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void updateResume(Resume resume, Object object) {
-        storage[(int)object] = resume;
+    public void doUpdate(Resume resume, Object index) {
+        storage[(Integer) index] = resume;
     }
 
     @Override
-    public void saveResume(Resume resume, Object object) {
+    public void doSave(Resume resume, Object index) {
         if (size < STORAGE_LIMIT) {
-            insertElement(resume, (int)object);
+            insertElement(resume, (Integer) index);
             size++;
         } else {
             throw new StorageException("Storage is overflow!", resume.getUuid());
@@ -37,19 +35,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void deleteResume(Object obj) {
-            fillDeletedElement((int)obj);
+    public void doDelete(Object index) {
+        fillDeletedElement((Integer) index);
         storage[size - 1] = null;
         size--;
     }
 
     @Override
-    public Resume getResume(Object object) {
-        return storage[(int)object];
+    public Resume doGet(Object index) {
+        return storage[(Integer) index];
     }
 
-    public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
+    public List<Resume> getAllSorted() {
+        return new ArrayList<>(Arrays.asList(storage));
     }
 
     @Override
@@ -61,10 +59,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected abstract void insertElement(Resume resume, int index);
 
-    public  boolean isExist(Object object){
-        return (int)object >= 0;
+    public boolean isExist(Object index) {
+        return (Integer) index >= 0;
     }
 
-
+    protected abstract Integer getSearchKey(String uuid);
 
 }

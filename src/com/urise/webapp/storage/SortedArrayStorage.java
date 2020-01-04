@@ -3,13 +3,24 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
 
+    private static final Comparator<Resume> RESUME_COMPARATOR = new Comparator<Resume>() {
+        @Override
+        public int compare(Resume o1, Resume o2) {
+            if (!(o1.getFullName().equals(o2.getFullName()))){
+                return o1.getFullName().compareTo(o2.getFullName());
+            }
+            else return o1.getUuid().compareTo(o2.getUuid());
+        }
+    };
+
     @Override
-    protected Object getIndex(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         Resume searchKey = new Resume(uuid);
-        return Arrays.binarySearch(storage, 0, size, searchKey);
+        return Arrays.binarySearch(storage, 0, size, searchKey, RESUME_COMPARATOR);
     }
 
     @Override
@@ -21,7 +32,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
     protected void insertElement(Resume resume, int index) {
         int sortIndex = -(index) - 1;
-        // @return ...  (-(<i>insertion point</i>) - 1)
         if (size - 1 - sortIndex >= 0)
             System.arraycopy(storage, sortIndex, storage, sortIndex + 1, size - 1 - sortIndex);
         storage[sortIndex] = resume;
