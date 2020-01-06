@@ -27,8 +27,20 @@ public class MapResumeStorage extends AbstractStorage {
         hashMap.remove(key);
     }
 
+    private static final Comparator<Resume> GETALLSORTED_COMPARATOR = new Comparator<Resume>() {
+        @Override
+        public int compare(Resume o1, Resume o2) {
+            if (o1.getFullName().equals(o2.getFullName())) {
+                return o1.getUuid().compareTo(o2.getUuid());
+            } else return o1.getFullName().compareTo(o2.getFullName());
+        }
+    };
+
     public List<Resume> getAllSorted() {
-        return new ArrayList<>(hashMap.values());
+        List<Resume> list = new ArrayList(hashMap.entrySet());
+        Collections.sort(list, GETALLSORTED_COMPARATOR);
+
+        return list;
     }
 
     @Override

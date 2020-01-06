@@ -10,10 +10,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     private static final Comparator<Resume> RESUME_COMPARATOR = new Comparator<Resume>() {
         @Override
         public int compare(Resume o1, Resume o2) {
-            if (!(o1.getFullName().equals(o2.getFullName()))){
-                return o1.getFullName().compareTo(o2.getFullName());
-            }
-            else return o1.getUuid().compareTo(o2.getUuid());
+            return o1.getUuid().compareTo(o2.getUuid());
         }
     };
 

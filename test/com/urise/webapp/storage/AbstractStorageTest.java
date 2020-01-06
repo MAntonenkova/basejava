@@ -16,7 +16,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public abstract class AbstractStorageTest {
-    private Storage storage;
+    protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
@@ -29,10 +29,10 @@ public abstract class AbstractStorageTest {
     private static final Resume RESUME_4;
 
     static {
-        RESUME_1 = new Resume(UUID_1);
-        RESUME_2 = new Resume(UUID_2);
-        RESUME_3 = new Resume(UUID_3);
-        RESUME_4 = new Resume(UUID_4);
+        RESUME_1 = new Resume(UUID_1, "Ivanov");
+        RESUME_2 = new Resume(UUID_2, "Petrov");
+        RESUME_3 = new Resume(UUID_3, "Sidorov");
+        RESUME_4 = new Resume(UUID_4, "Pupkin");
     }
 
     AbstractStorageTest(Storage storage) {

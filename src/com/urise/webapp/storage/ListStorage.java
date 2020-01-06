@@ -1,8 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.*;
@@ -21,16 +18,16 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public void doSave(Resume resume, Object searchKey) {
-        list.add( resume);
+        list.add(resume);
     }
 
     @Override
     public void doDelete(Object searchKey) {
-        list.remove(((Integer)searchKey).intValue());
+        list.remove(((Integer) searchKey).intValue());
     }
 
     public List<Resume> getAllSorted() {
-        return list.subList(0, getSize());
+        return new ArrayList<>(list);
     }
 
     @Override

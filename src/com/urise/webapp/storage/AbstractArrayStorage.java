@@ -5,9 +5,6 @@ import com.urise.webapp.model.Resume;
 
 import java.util.*;
 
-/**
- * Array based storage for Resumes
- */
 public abstract class AbstractArrayStorage extends AbstractStorage {
     static final int STORAGE_LIMIT = 10_000;
 
@@ -62,7 +59,5 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     public boolean isExist(Object index) {
         return (Integer) index >= 0;
     }
-
-    protected abstract Integer getSearchKey(String uuid);
 
 }

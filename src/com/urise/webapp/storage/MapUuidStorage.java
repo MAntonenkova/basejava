@@ -48,7 +48,6 @@ public class MapUuidStorage extends AbstractStorage {
 
     public boolean isExist(Object searchKey) {
         String key = (String) searchKey;
-
         return hashMap.containsKey(key);
     }
 }
