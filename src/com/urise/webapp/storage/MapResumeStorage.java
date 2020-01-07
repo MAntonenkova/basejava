@@ -49,8 +49,13 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    public Object getSearchKey(String fullName) {
-        return fullName;
+    public Object getSearchKey(String uuid) {
+        for (Map.Entry<String, Resume> entry : hashMap.entrySet() ) {
+            if (entry.getKey().equals(uuid)){
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
     public Resume doGet(Object searchKey) {
