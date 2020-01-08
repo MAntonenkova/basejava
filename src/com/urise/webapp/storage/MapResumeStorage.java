@@ -1,45 +1,46 @@
 package com.urise.webapp.storage;
 
+import com.sun.org.apache.regexp.internal.RE;
 import com.urise.webapp.model.Resume;
 
 import java.util.*;
 
 public class MapResumeStorage extends AbstractStorage {
-    private Map<String, Resume> hashMap = new HashMap<>();
+    private Map<Resume, Resume> hashMap = new HashMap<>();
+
+    private static final Comparator<Resume> RESUME_COMPARATOR = new Comparator<Resume>() {
+        @Override
+        public int compare(Resume o1, Resume o2) {
+            if (!(o1.getFullName().equals(o2.getFullName()))){
+                return o1.getFullName().compareTo(o2.getFullName());
+            }
+            else return o1.getUuid().compareTo(o2.getUuid());
+        }
+    };
 
     @Override
     public void clear() {
         hashMap.clear();
     }
 
-    public void doUpdate(Resume resume, Object searchKey) {
-        hashMap.put((String) searchKey, resume);
+    protected void doUpdate(Resume resume, Object searchKey) {
+        hashMap.put((Resume) searchKey, resume);
     }
 
     @Override
-    public void doSave(Resume resume, Object searchKey) {
-        hashMap.put((String) searchKey, resume);
+    protected void doSave(Resume resume, Object searchKey) {
+        hashMap.put((Resume) searchKey, resume);
     }
 
     @Override
-    public void doDelete(Object searchKey) {
-        String key = (String) searchKey;
+    protected void doDelete(Object searchKey) {
+        Resume key = (Resume) searchKey;
         hashMap.remove(key);
     }
 
-    private static final Comparator<Resume> GETALLSORTED_COMPARATOR = new Comparator<Resume>() {
-        @Override
-        public int compare(Resume o1, Resume o2) {
-            if (o1.getFullName().equals(o2.getFullName())) {
-                return o1.getUuid().compareTo(o2.getUuid());
-            } else return o1.getFullName().compareTo(o2.getFullName());
-        }
-    };
-
     public List<Resume> getAllSorted() {
-        List<Resume> list = new ArrayList(hashMap.entrySet());
-        Collections.sort(list, GETALLSORTED_COMPARATOR);
-
+        List<Resume> list = new ArrayList<>(hashMap.values());
+        list.sort(RESUME_COMPARATOR);
         return list;
     }
 
@@ -49,23 +50,18 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    public Object getSearchKey(String uuid) {
-        for (Map.Entry<String, Resume> entry : hashMap.entrySet() ) {
-            if (entry.getKey().equals(uuid)){
-                return entry.getValue();
-            }
-        }
-        return null;
+    protected Resume getSearchKey(String uuid) {
+        return hashMap.get(new Resume(uuid));
     }
 
-    public Resume doGet(Object searchKey) {
-        String key = (String) searchKey;
+    protected Resume doGet(Object searchKey) {
+        Resume key = (Resume) searchKey;
         return hashMap.get(key);
     }
 
-    public boolean isExist(Object searchKey) {
-        String key = (String) searchKey;
-
+    protected boolean isExist(Object searchKey) {
+        Resume key = (Resume) searchKey;
         return hashMap.containsKey(key);
+       // return (hashMap.get(searchKey)) != null;
     }
 }
