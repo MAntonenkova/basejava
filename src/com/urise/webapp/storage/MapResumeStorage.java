@@ -6,9 +6,9 @@ import com.urise.webapp.model.Resume;
 import java.util.*;
 
 public class MapResumeStorage extends AbstractStorage {
-    private Map<Resume, Resume> hashMap = new HashMap<>();
+    private Map<String, Resume> hashMap = new HashMap<>();
 
-    private static final Comparator<Resume> RESUME_COMPARATOR = new Comparator<Resume>() {
+   /* private static final Comparator<Resume> RESUME_COMPARATOR = new Comparator<Resume>() {
         @Override
         public int compare(Resume o1, Resume o2) {
             if (!(o1.getFullName().equals(o2.getFullName()))){
@@ -16,7 +16,7 @@ public class MapResumeStorage extends AbstractStorage {
             }
             else return o1.getUuid().compareTo(o2.getUuid());
         }
-    };
+    };*/
 
     @Override
     public void clear() {
@@ -24,24 +24,24 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     protected void doUpdate(Resume resume, Object searchKey) {
-        hashMap.put((Resume) searchKey, resume);
+        hashMap.put(resume.getUuid(), resume);
     }
 
     @Override
     protected void doSave(Resume resume, Object searchKey) {
-        hashMap.put((Resume) searchKey, resume);
+        hashMap.put(resume.getUuid(), resume);
     }
 
     @Override
     protected void doDelete(Object searchKey) {
-        Resume key = (Resume) searchKey;
-        hashMap.remove(key);
+        hashMap.remove(((Resume) searchKey).getUuid());
     }
 
     public List<Resume> getAllSorted() {
         List<Resume> list = new ArrayList<>(hashMap.values());
         list.sort(RESUME_COMPARATOR);
         return list;
+
     }
 
     @Override
@@ -51,17 +51,14 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected Resume getSearchKey(String uuid) {
-        return hashMap.get(new Resume(uuid));
+        return hashMap.get(uuid);
     }
 
     protected Resume doGet(Object searchKey) {
-        Resume key = (Resume) searchKey;
-        return hashMap.get(key);
+            return (Resume)searchKey;
     }
 
     protected boolean isExist(Object searchKey) {
-        Resume key = (Resume) searchKey;
-        return hashMap.containsKey(key);
-       // return (hashMap.get(searchKey)) != null;
+        return searchKey!=null;
     }
 }

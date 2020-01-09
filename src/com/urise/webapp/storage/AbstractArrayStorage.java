@@ -11,7 +11,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
-    private static final Comparator<Resume> RESUME_COMPARATOR = new Comparator<Resume>() {
+ /*   private static final Comparator<Resume> RESUME_COMPARATOR = new Comparator<Resume>() {
         @Override
         public int compare(Resume o1, Resume o2) {
             if (!(o1.getFullName().equals(o2.getFullName()))){
@@ -19,7 +19,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
             }
             else return o1.getUuid().compareTo(o2.getUuid());
         }
-    };
+    };*/
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);

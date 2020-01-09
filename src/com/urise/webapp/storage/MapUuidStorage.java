@@ -7,7 +7,7 @@ import java.util.*;
 public class MapUuidStorage extends AbstractStorage {
     private Map<String, Resume> hashMap = new HashMap<>();
 
-    private static final Comparator<Resume> RESUME_COMPARATOR = new Comparator<Resume>() {
+ /*   private static final Comparator<Resume> RESUME_COMPARATOR = new Comparator<Resume>() {
         @Override
         public int compare(Resume o1, Resume o2) {
             if (!(o1.getFullName().equals(o2.getFullName()))){
@@ -15,7 +15,7 @@ public class MapUuidStorage extends AbstractStorage {
             }
             else return o1.getUuid().compareTo(o2.getUuid());
         }
-    };
+    };*/
 
     @Override
     public void clear() {
@@ -33,8 +33,7 @@ public class MapUuidStorage extends AbstractStorage {
 
     @Override
     protected void doDelete(Object searchKey) {
-        String key = (String) searchKey;
-        hashMap.remove(key);
+        hashMap.remove(searchKey);
     }
 
     public List<Resume> getAllSorted() {
