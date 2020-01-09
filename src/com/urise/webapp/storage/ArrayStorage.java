@@ -2,6 +2,8 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
+import java.util.Arrays;
+import java.util.List;
 
 public class ArrayStorage extends AbstractArrayStorage {
 
@@ -23,5 +25,10 @@ public class ArrayStorage extends AbstractArrayStorage {
     @Override
     protected void insertElement(Resume resume, int index) {
         storage[size] = resume;
+    }
+
+    @Override
+    public List<Resume> doCopy(){
+        return Arrays.asList(Arrays.copyOfRange(storage, 0, getSize()));
     }
 }

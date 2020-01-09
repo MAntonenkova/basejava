@@ -26,10 +26,9 @@ public class ListStorage extends AbstractStorage {
         list.remove(((Integer) searchKey).intValue());
     }
 
-    public List<Resume> getAllSorted() {
-        List<Resume> listSorted = list;
-        listSorted.sort(Comparator.comparing(Resume::getFullName));
-        return listSorted;
+    @Override
+    public List<Resume> doCopy() {
+        return list;
     }
 
     @Override

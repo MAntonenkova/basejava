@@ -9,14 +9,6 @@ public class Resume {
 
     private String fullName;
 
-    public String getUuid() {
-        return uuid;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
     public Resume(String uuid, String fullName) {
         Objects.requireNonNull(uuid, "uuid must not be null");
         Objects.requireNonNull(fullName, "fullName must not be null");
@@ -25,9 +17,15 @@ public class Resume {
     }
 
     public Resume(String fullName) {
-        Objects.requireNonNull(fullName, "fullName must not be null");
-        this.fullName = fullName;
-        this.uuid = UUID.randomUUID().toString();
+        this(UUID.randomUUID().toString(), fullName);
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     @Override
