@@ -23,13 +23,12 @@ public class MapUuidStorage extends AbstractStorage {
 
     @Override
     protected void doDelete(Object searchKey) {
-        hashMap.remove(searchKey);
+        hashMap.remove((String) searchKey);
     }
 
     @Override
     public List<Resume> doCopy() {
-        List<Resume> list = new ArrayList<>(hashMap.values());
-        return list;
+        return new ArrayList<>(hashMap.values());
     }
 
     @Override

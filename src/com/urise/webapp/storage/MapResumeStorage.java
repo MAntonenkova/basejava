@@ -38,8 +38,7 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     public List<Resume> doCopy() {
-        List<Resume> list = new ArrayList<>(hashMap.values());
-        return list;
+        return new ArrayList<>(hashMap.values());
     }
 
     protected Resume doGet(Object searchKey) {

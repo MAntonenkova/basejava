@@ -5,7 +5,6 @@ import com.urise.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
 
     AbstractArrayStorageTest(Storage storage) {

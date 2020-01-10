@@ -28,7 +28,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public List<Resume> doCopy() {
-        return list;
+        return new ArrayList<>(list);
     }
 
     @Override

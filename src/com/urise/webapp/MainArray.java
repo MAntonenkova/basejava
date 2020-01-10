@@ -8,10 +8,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**
- * Interactive test for com.urise.webapp.storage.ArrayStorage implementation
- * (just run, no need to understand)
- */
 public class MainArray {
     private final static Storage ARRAY_STORAGE = new SortedArrayStorage();
 
@@ -33,7 +29,7 @@ public class MainArray {
             }
             switch (params[0]) {
                 case "list":
-             //       printAll();
+                    //       printAll();
                     break;
                 case "size":
                     System.out.println(ARRAY_STORAGE.getSize());
@@ -41,23 +37,23 @@ public class MainArray {
                 case "save":
                     r = new Resume(uuid);
                     ARRAY_STORAGE.save(r);
-              //      printAll();
+                    //      printAll();
                     break;
                 case "update":
                     r = new Resume(uuid);
                     ARRAY_STORAGE.update(r);
-                //    printAll();
+                    //    printAll();
                     break;
                 case "delete":
                     ARRAY_STORAGE.delete(uuid);
-                //    printAll();
+                    //    printAll();
                     break;
                 case "get":
                     System.out.println(ARRAY_STORAGE.get(uuid));
                     break;
                 case "clear":
                     ARRAY_STORAGE.clear();
-               //     printAll();
+                    //     printAll();
                     break;
                 case "exit":
                     return;
