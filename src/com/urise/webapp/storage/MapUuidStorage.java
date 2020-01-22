@@ -4,7 +4,7 @@ import com.urise.webapp.model.Resume;
 
 import java.util.*;
 
-public class MapUuidStorage extends AbstractStorage {
+public class MapUuidStorage extends AbstractStorage<String> {
     private Map<String, Resume> hashMap = new HashMap<>();
 
     @Override
@@ -12,18 +12,18 @@ public class MapUuidStorage extends AbstractStorage {
         hashMap.clear();
     }
 
-    protected void doUpdate(Resume resume, Object searchKey) {
-        hashMap.put((String) searchKey, resume);
+    protected void doUpdate(Resume resume, String uuid) {
+        hashMap.put( uuid, resume);
     }
 
     @Override
-    protected void doSave(Resume resume, Object searchKey) {
-        hashMap.put((String) searchKey, resume);
+    protected void doSave(Resume resume, String uuid) {
+        hashMap.put(uuid, resume);
     }
 
     @Override
-    protected void doDelete(Object searchKey) {
-        hashMap.remove((String) searchKey);
+    protected void doDelete(String uuid) {
+        hashMap.remove( uuid);
     }
 
     @Override
@@ -37,17 +37,17 @@ public class MapUuidStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getSearchKey(String uuid) {
+    protected String getSearchKey(String uuid) {
         return uuid;
     }
 
-    protected Resume doGet(Object searchKey) {
-        String key = (String) searchKey;
-        return hashMap.get(key);
+    @Override
+    protected Resume doGet(String uuid) {
+        return hashMap.get(uuid);
     }
 
-    protected boolean isExist(Object searchKey) {
-        String key = (String) searchKey;
-        return hashMap.containsKey(key);
+    @Override
+    protected boolean isExist(String uuid) {
+        return hashMap.containsKey(uuid);
     }
 }
