@@ -33,4 +33,28 @@ public class OrganizationClass {
     public String getPositionDescription() {
         return positionDescription;
     }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public void setUrlAdress(String urlAdress) {
+        this.urlAdress = urlAdress;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public void setPositionDescription(String positionDescription) {
+        this.positionDescription = positionDescription;
+    }
 }
