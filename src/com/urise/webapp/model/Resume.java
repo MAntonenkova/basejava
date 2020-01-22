@@ -21,18 +21,15 @@ public class Resume {
         this.uuid = uuid;
         this.fullName = fullName;
     }
-
     Map<SectionType, Section> sections = new HashMap<>();
-
     Map<ContactType, String> contacts = new HashMap<>();
 
-    public void fillSections(){
-        sections.put(SectionType.PERSONAL, new TextClass());
-        sections.put(SectionType.OBJECTIVE, new TextClass());
-        sections.put(SectionType.ACHIEVEMENT, new ListClass());
-        sections.put(SectionType.QUALIFICATIONS, new ListClass());
-        sections.put(SectionType.EXPERIENCE, new ExperienceSection());
-        sections.put(SectionType.EDUCATION, new ExperienceSection());
+    public Map<SectionType, Section> getSections() {
+        return sections;
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
     }
 
     public String getUuid() {
