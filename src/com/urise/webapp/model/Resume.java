@@ -21,14 +21,15 @@ public class Resume {
         this.uuid = uuid;
         this.fullName = fullName;
     }
-    Map<SectionType, Section> sections = new HashMap<>();
-    Map<ContactType, String> contacts = new HashMap<>();
 
-    public Map<SectionType, Section> getSections() {
+    private Map<SectionType, Section> sections = new HashMap<>();
+    private Map<ContactType, String> contacts = new HashMap<>();
+
+    Map<SectionType, Section> getSections() {
         return sections;
     }
 
-    public Map<ContactType, String> getContacts() {
+    Map<ContactType, String> getContacts() {
         return contacts;
     }
 
@@ -63,6 +64,8 @@ public class Resume {
         return "Resume{" +
                 "uuid='" + uuid + '\'' +
                 ", fullName='" + fullName + '\'' +
+                ", sections=" + sections +
+                ", contacts=" + contacts +
                 '}';
     }
 }

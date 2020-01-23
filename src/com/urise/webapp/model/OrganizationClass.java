@@ -3,12 +3,21 @@ package com.urise.webapp.model;
 import java.time.LocalDate;
 
 public class OrganizationClass {
-    public String companyName;
-    public String urlAdress;
-    public LocalDate startDate;
-    public LocalDate endDate;
-    public String position;
-    public String positionDescription;
+    private String companyName;
+    private String urlAdress;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String position;
+    private String positionDescription;
+
+    OrganizationClass(String companyName, String urlAdress, LocalDate startDate, LocalDate endDate, String position, String positionDescription) {
+        this.companyName = companyName;
+        this.urlAdress = urlAdress;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.position = position;
+        this.positionDescription = positionDescription;
+    }
 
     public String getCompanyName() {
         return companyName;
@@ -32,29 +41,5 @@ public class OrganizationClass {
 
     public String getPositionDescription() {
         return positionDescription;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public void setUrlAdress(String urlAdress) {
-        this.urlAdress = urlAdress;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public void setPositionDescription(String positionDescription) {
-        this.positionDescription = positionDescription;
     }
 }

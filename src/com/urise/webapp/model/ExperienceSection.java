@@ -1,17 +1,14 @@
 package com.urise.webapp.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExperienceSection extends OrganizationClass implements Section {
+class ExperienceSection implements Section {
 
-    private List<OrganizationClass> organizations = new ArrayList<>();
+    private List<OrganizationClass> content;
 
-    private OrganizationClass organization = new OrganizationClass();
-
-    private void fillOrganization(){
-      organizations.add(organization);
+    ExperienceSection(List<OrganizationClass> content) {
+        this.content = content;
     }
-
-
 }
