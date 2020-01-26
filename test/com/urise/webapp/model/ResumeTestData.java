@@ -40,15 +40,15 @@ public class ResumeTestData {
         qualificationsList.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle");
         qualificationsList.add("MySQL, SQLite, MS SQL, HSQLDB  ");
 
-        List<OrganizationClass> experienceList = new ArrayList<>();
+        List<Organization> experienceList = new ArrayList<>();
 
         SimpleDateFormat DateFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
 
-        OrganizationClass experience1 = new OrganizationClass("Alcatel", "www.alcatel.ru", LocalDate.of(1997, 9, 1),
+        Organization experience1 = new Organization("Alcatel", "www.alcatel.ru", LocalDate.of(1997, 9, 1),
                 LocalDate.of(2005, 1, 1), "Инженер по аппаратному и программному тестированию",
                 "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM).");
 
-        OrganizationClass experience2 = new OrganizationClass("Siemens AG", "https://new.siemens.com/ru/ru.html",
+        Organization experience2 = new Organization("Siemens AG", "https://new.siemens.com/ru/ru.html",
                 LocalDate.of(2005, 1, 1), LocalDate.of(2007, 2, 1),
                 "Разработчик ПО",
                 "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной IN платформе" +
@@ -57,14 +57,14 @@ public class ResumeTestData {
         experienceList.add(experience1);
         experienceList.add(experience2);
 
-        List<OrganizationClass> educationList = new ArrayList<>();
+        List<Organization> educationList = new ArrayList<>();
 
-        OrganizationClass education1 = new OrganizationClass("Заочная физико-техническая школа при МФТИ",
+        Organization education1 = new Organization("Заочная физико-техническая школа при МФТИ",
                 "http://www.school.mipt.ru/", LocalDate.of(1984, 9, 1),
                 LocalDate.of(1987, 6, 1), "Закончил с отличием",
                 "");
 
-        OrganizationClass education2 = new OrganizationClass("Санкт-Петербургский национальный исследовательский университет" +
+        Organization education2 = new Organization("Санкт-Петербургский национальный исследовательский университет" +
                 "информационных технологий, механики и оптики",
                 "http://www.ifmo.ru/ru/", LocalDate.of(1993, 9, 1),
                 LocalDate.of(1996, 7, 1), "Закончил с отличием",
@@ -100,5 +100,4 @@ public class ResumeTestData {
 
         System.out.println(resume);
     }
-
 }

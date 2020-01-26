@@ -1,15 +1,14 @@
 package com.urise.webapp.model;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class Resume {
 
     private final String uuid;
-
     private final String fullName;
+
+    private EnumMap<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+    private EnumMap<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -22,14 +21,11 @@ public class Resume {
         this.fullName = fullName;
     }
 
-    private Map<SectionType, Section> sections = new HashMap<>();
-    private Map<ContactType, String> contacts = new HashMap<>();
-
-    Map<SectionType, Section> getSections() {
+    public EnumMap<SectionType, Section> getSections() {
         return sections;
     }
 
-    Map<ContactType, String> getContacts() {
+    public EnumMap<ContactType, String> getContacts() {
         return contacts;
     }
 

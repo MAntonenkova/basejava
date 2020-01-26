@@ -1,12 +1,35 @@
 package com.urise.webapp.model;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 class ListSection implements Section {
-    private List<String> content;
+    private final List<String> items;
 
-    ListSection(List<String> content) {
-        this.content = content;
+    public ListSection(List<String> items) {
+        Objects.requireNonNull(items, "content must be not empty");
+        this.items = items;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ListSection that = (ListSection) o;
+
+        return items != null ? items.equals(that.items) : that.items == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return items != null ? items.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "ListSection{" +
+                "content=" + items +
+                '}';
     }
 }

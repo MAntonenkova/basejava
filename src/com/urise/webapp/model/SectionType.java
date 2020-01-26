@@ -1,8 +1,5 @@
 package com.urise.webapp.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum SectionType {
     PERSONAL("Личные качества"),
     OBJECTIVE("Позиция"),
@@ -15,6 +12,10 @@ public enum SectionType {
 
     SectionType(String title) {
         this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }
 

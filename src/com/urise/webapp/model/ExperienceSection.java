@@ -1,14 +1,36 @@
 package com.urise.webapp.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 class ExperienceSection implements Section {
 
-    private List<OrganizationClass> content;
+    private final List<Organization> organizations;
 
-    ExperienceSection(List<OrganizationClass> content) {
-        this.content = content;
+    public ExperienceSection(List<Organization> organizations) {
+        Objects.requireNonNull(organizations, "organizations must be not empty");
+        this.organizations = organizations;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ExperienceSection that = (ExperienceSection) o;
+
+        return organizations != null ? organizations.equals(that.organizations) : that.organizations == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return organizations != null ? organizations.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "ExperienceSection{" +
+                "organizations=" + organizations +
+                '}';
     }
 }
