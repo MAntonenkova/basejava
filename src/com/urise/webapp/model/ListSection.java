@@ -18,7 +18,7 @@ class ListSection implements Section {
 
         ListSection that = (ListSection) o;
 
-        return items != null ? items.equals(that.items) : that.items == null;
+        return Objects.equals(items, that.items);
     }
 
     @Override

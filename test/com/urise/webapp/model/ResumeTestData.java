@@ -1,10 +1,8 @@
 package com.urise.webapp.model;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.List;;
 import java.util.Map;
 
 public class ResumeTestData {
@@ -42,8 +40,6 @@ public class ResumeTestData {
 
         List<Organization> experienceList = new ArrayList<>();
 
-        SimpleDateFormat DateFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
-
         Organization experience1 = new Organization("Alcatel", "www.alcatel.ru", LocalDate.of(1997, 9, 1),
                 LocalDate.of(2005, 1, 1), "Инженер по аппаратному и программному тестированию",
                 "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM).");
@@ -62,13 +58,13 @@ public class ResumeTestData {
         Organization education1 = new Organization("Заочная физико-техническая школа при МФТИ",
                 "http://www.school.mipt.ru/", LocalDate.of(1984, 9, 1),
                 LocalDate.of(1987, 6, 1), "Закончил с отличием",
-                "");
+                null);
 
         Organization education2 = new Organization("Санкт-Петербургский национальный исследовательский университет" +
                 "информационных технологий, механики и оптики",
                 "http://www.ifmo.ru/ru/", LocalDate.of(1993, 9, 1),
                 LocalDate.of(1996, 7, 1), "Закончил с отличием",
-                "");
+                null);
 
         educationList.add(education1);
         educationList.add(education2);

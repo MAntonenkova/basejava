@@ -17,7 +17,7 @@ class TextSection implements Section {
 
         TextSection that = (TextSection) o;
 
-        return content != null ? content.equals(that.content) : that.content == null;
+        return Objects.equals(content, that.content);
     }
 
     @Override

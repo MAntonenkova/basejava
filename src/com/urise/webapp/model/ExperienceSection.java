@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 
 class ExperienceSection implements Section {
-
     private final List<Organization> organizations;
 
     public ExperienceSection(List<Organization> organizations) {
@@ -19,7 +18,7 @@ class ExperienceSection implements Section {
 
         ExperienceSection that = (ExperienceSection) o;
 
-        return organizations != null ? organizations.equals(that.organizations) : that.organizations == null;
+        return Objects.equals(organizations, that.organizations);
     }
 
     @Override

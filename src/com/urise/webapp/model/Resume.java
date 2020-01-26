@@ -7,8 +7,8 @@ public class Resume {
     private final String uuid;
     private final String fullName;
 
-    private EnumMap<SectionType, Section> sections = new EnumMap<>(SectionType.class);
-    private EnumMap<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+    private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -21,11 +21,11 @@ public class Resume {
         this.fullName = fullName;
     }
 
-    public EnumMap<SectionType, Section> getSections() {
+    public Map<SectionType, Section> getSections() {
         return sections;
     }
 
-    public EnumMap<ContactType, String> getContacts() {
+    public Map<ContactType, String> getContacts() {
         return contacts;
     }
 

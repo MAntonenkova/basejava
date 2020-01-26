@@ -29,7 +29,7 @@ public class Organization {
         return companyName;
     }
 
-    public String geturlAddress() {
+    public String getUrlAddress() {
         return urlAddress;
     }
 
@@ -56,12 +56,12 @@ public class Organization {
 
         Organization that = (Organization) o;
 
-        if (companyName != null ? !companyName.equals(that.companyName) : that.companyName != null) return false;
-        if (urlAddress != null ? !urlAddress.equals(that.urlAddress) : that.urlAddress != null) return false;
-        if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) return false;
-        if (endDate != null ? !endDate.equals(that.endDate) : that.endDate != null) return false;
-        if (position != null ? !position.equals(that.position) : that.position != null) return false;
-        return positionDescription != null ? positionDescription.equals(that.positionDescription) : that.positionDescription == null;
+        if (!Objects.equals(companyName, that.companyName)) return false;
+        if (!Objects.equals(urlAddress, that.urlAddress)) return false;
+        if (!Objects.equals(startDate, that.startDate)) return false;
+        if (!Objects.equals(endDate, that.endDate)) return false;
+        if (!Objects.equals(position, that.position)) return false;
+        return Objects.equals(positionDescription, that.positionDescription);
     }
 
     @Override
