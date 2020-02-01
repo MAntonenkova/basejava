@@ -3,10 +3,10 @@ package com.urise.webapp.model;
 import java.util.List;
 import java.util.Objects;
 
-class ExperienceSection implements Section {
+class OrganizationSection extends Section {
     private final List<Organization> organizations;
 
-    public ExperienceSection(List<Organization> organizations) {
+    OrganizationSection(List<Organization> organizations) {
         Objects.requireNonNull(organizations, "organizations must be not empty");
         this.organizations = organizations;
     }
@@ -16,7 +16,7 @@ class ExperienceSection implements Section {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ExperienceSection that = (ExperienceSection) o;
+        OrganizationSection that = (OrganizationSection) o;
 
         return Objects.equals(organizations, that.organizations);
     }
@@ -28,7 +28,7 @@ class ExperienceSection implements Section {
 
     @Override
     public String toString() {
-        return "ExperienceSection{" +
+        return "OrganizationSection{" +
                 "organizations=" + organizations +
                 '}';
     }

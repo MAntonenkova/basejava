@@ -21,13 +21,6 @@ public class Resume {
         this.fullName = fullName;
     }
 
-    public Map<SectionType, Section> getSections() {
-        return sections;
-    }
-
-    public Map<ContactType, String> getContacts() {
-        return contacts;
-    }
 
     public String getUuid() {
         return uuid;
@@ -35,6 +28,22 @@ public class Resume {
 
     public String getFullName() {
         return fullName;
+    }
+
+    Map<SectionType, Section> getSections() {
+        return sections;
+    }
+
+    Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+  public String getContact (ContactType type){
+      return contacts.get(type);
+  }
+
+    public Section getSection (SectionType type){
+        return sections.get(type);
     }
 
     @Override

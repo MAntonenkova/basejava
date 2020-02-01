@@ -3,12 +3,16 @@ package com.urise.webapp.model;
 import java.util.List;
 import java.util.Objects;
 
-class ListSection implements Section {
+class ListSection extends Section {
     private final List<String> items;
 
-    public ListSection(List<String> items) {
+    ListSection(List<String> items) {
         Objects.requireNonNull(items, "content must be not empty");
         this.items = items;
+    }
+
+    public List<String> getItems() {
+        return items;
     }
 
     @Override
@@ -18,12 +22,12 @@ class ListSection implements Section {
 
         ListSection that = (ListSection) o;
 
-        return Objects.equals(items, that.items);
+        return items.equals(that.items);
     }
 
     @Override
     public int hashCode() {
-        return items != null ? items.hashCode() : 0;
+        return items.hashCode();
     }
 
     @Override

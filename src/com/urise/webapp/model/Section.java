@@ -1,4 +1,4 @@
 package com.urise.webapp.model;
 
-public interface Section {
+abstract class Section {
 }

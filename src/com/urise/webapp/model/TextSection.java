@@ -2,12 +2,16 @@ package com.urise.webapp.model;
 
 import java.util.Objects;
 
-class TextSection implements Section {
+class TextSection extends Section {
     final private String content;
 
-    public TextSection(String content) {
+    TextSection(String content) {
         Objects.requireNonNull(content, "content must be not empty");
         this.content = content;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     @Override
@@ -17,12 +21,12 @@ class TextSection implements Section {
 
         TextSection that = (TextSection) o;
 
-        return Objects.equals(content, that.content);
+        return content.equals(that.content);
     }
 
     @Override
     public int hashCode() {
-        return content != null ? content.hashCode() : 0;
+        return content.hashCode();
     }
 
     @Override

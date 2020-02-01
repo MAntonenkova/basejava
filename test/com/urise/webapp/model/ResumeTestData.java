@@ -2,7 +2,7 @@ package com.urise.webapp.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;;
+import java.util.List;
 import java.util.Map;
 
 public class ResumeTestData {
@@ -40,31 +40,47 @@ public class ResumeTestData {
 
         List<Organization> experienceList = new ArrayList<>();
 
-        Organization experience1 = new Organization("Alcatel", "www.alcatel.ru", LocalDate.of(1997, 9, 1),
+        Position position1 = new Position(LocalDate.of(1997, 9, 1),
                 LocalDate.of(2005, 1, 1), "Инженер по аппаратному и программному тестированию",
                 "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM).");
 
-        Organization experience2 = new Organization("Siemens AG", "https://new.siemens.com/ru/ru.html",
+        Position position2 = new Position(
                 LocalDate.of(2005, 1, 1), LocalDate.of(2007, 2, 1),
                 "Разработчик ПО",
                 "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной IN платформе" +
                         " Siemens @vantage (Java, Unix).");
+
+        Organization experience1 = new Organization("Alcatel", "www.alcatel.ru", position1);
+
+        Organization experience2 = new Organization("Siemens AG", "https://new.siemens.com/ru/ru.html", position2);
 
         experienceList.add(experience1);
         experienceList.add(experience2);
 
         List<Organization> educationList = new ArrayList<>();
 
-        Organization education1 = new Organization("Заочная физико-техническая школа при МФТИ",
-                "http://www.school.mipt.ru/", LocalDate.of(1984, 9, 1),
+        Position position3 = new Position(LocalDate.of(1984, 9, 1),
                 LocalDate.of(1987, 6, 1), "Закончил с отличием",
                 null);
 
-        Organization education2 = new Organization("Санкт-Петербургский национальный исследовательский университет" +
-                "информационных технологий, механики и оптики",
-                "http://www.ifmo.ru/ru/", LocalDate.of(1993, 9, 1),
-                LocalDate.of(1996, 7, 1), "Закончил с отличием",
+        Position position4 = new Position(LocalDate.of(1993, 9, 1),
+                LocalDate.of(1996, 7, 1), "Аспирантура (программист С, С++)",
                 null);
+
+        Position position5 = new Position(LocalDate.of(1987, 9, 1),
+                LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)",
+                null);
+
+        List<Position> positions = new ArrayList<>();
+        positions.add(position4);
+        positions.add(position5);
+
+        Organization education1 = new Organization("Заочная физико-техническая школа при МФТИ",
+                "http://www.school.mipt.ru/", position3);
+
+        Organization education2 = new Organization(new Link("Санкт-Петербургский национальный исследовательский университет" +
+                "информационных технологий, механики и оптики",
+                "http://www.ifmo.ru/ru/"), positions);
 
         educationList.add(education1);
         educationList.add(education2);
@@ -74,8 +90,8 @@ public class ResumeTestData {
         Section textClassObjective = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         Section listClassAchievement = new ListSection(achievementsList);
         Section listClassQualifications = new ListSection(qualificationsList);
-        Section listClassExperience = new ExperienceSection(experienceList);
-        Section listClassEducation = new ExperienceSection(educationList);
+        Section listClassExperience = new OrganizationSection(experienceList);
+        Section listClassEducation = new OrganizationSection(educationList);
 
         sections.put(SectionType.PERSONAL, textClassPersonal);
         sections.put(SectionType.OBJECTIVE, textClassObjective);
