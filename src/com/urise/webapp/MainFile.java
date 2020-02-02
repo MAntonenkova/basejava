@@ -29,7 +29,8 @@ public class MainFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        getAllFileNamesInDirectory(file);
+        File file2 = new File("D:\\_JAVA\\!Internship\\JavaOps\\basejava");
+        getAllFileNamesInDirectory(file2);
     }
 
     private static void getAllFileNamesInDirectory(File fileOrDir) {

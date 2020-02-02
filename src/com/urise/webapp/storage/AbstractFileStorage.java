@@ -25,13 +25,13 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected File getSearchKey(String uuid) {
-        directoryIsNotEmpty(directory);
+        directoryIsNotEmpty();
         return new File(directory, uuid);
     }
 
     @Override
     protected void doUpdate(Resume resume, File fileSearchKey) {
-        directoryIsNotEmpty(directory);
+        directoryIsNotEmpty();
         try {
             doWrite(resume, fileSearchKey);
         } catch (IOException e) {
@@ -41,7 +41,6 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doSave(Resume resume, File fileSearchKey) {
-        directoryIsNotEmpty(directory);
         try {
             fileSearchKey.createNewFile();
             doUpdate(resume, fileSearchKey);
@@ -52,7 +51,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File fileSearchKey) {
-        directoryIsNotEmpty(directory);
+        directoryIsNotEmpty();
         try {
             fileSearchKey.delete();
         } catch (Exception e) {
@@ -62,7 +61,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected Resume doGet(File fileSearchKey) {
-        directoryIsNotEmpty(directory);
+        directoryIsNotEmpty();
         try {
             return doRead(fileSearchKey);
         } catch (IOException e) {
@@ -72,15 +71,13 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected boolean isExist(File file) {
-        directoryIsNotEmpty(directory);
         return file.exists();
     }
 
     @Override
     protected List<Resume> doCopy() {
-        directoryIsNotEmpty(directory);
+        directoryIsNotEmpty();
         List<Resume> list = new ArrayList<>();
-        directory.listFiles();
         for (File file : directory.listFiles()) {
             list.add(doGet(file));
         }
@@ -89,8 +86,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        directoryIsNotEmpty(directory);
-        for (File file : Objects.requireNonNull(directory.listFiles())) {
+        directoryIsNotEmpty();
+        for (File file : directory.listFiles()) {
             if (file.isFile()) {
                 doDelete(file);
             }
@@ -99,11 +96,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public int getSize() {
-        directoryIsNotEmpty(directory);
+        directoryIsNotEmpty();
         return directory.listFiles().length;
     }
 
-    public void directoryIsNotEmpty(File directory) {
+    public void directoryIsNotEmpty() {
         if (directory.listFiles() == null) {
             throw new StorageException("directory is empty", directory.getName());
         }
