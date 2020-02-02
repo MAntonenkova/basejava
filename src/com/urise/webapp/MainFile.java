@@ -29,25 +29,17 @@ public class MainFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        getAllFileNamesInDirectory("D:\\_JAVA\\!Internship\\JavaOps\\basejava");
+        getAllFileNamesInDirectory(file);
     }
 
-
-    private static void getAllFileNamesInDirectory(String directoryName) {
-        File dir = new File(directoryName);
-        File[] list = dir.listFiles();
+    private static void getAllFileNamesInDirectory(File fileOrDir) {
+        File[] list = fileOrDir.listFiles();
         if (list != null) {
             for (File eachFile : list) {
-                try {
-                    String path = eachFile.getCanonicalPath();
-                    File directoryOrFile = new File(path);
-                    if (directoryOrFile.isDirectory()) {
-                        getAllFileNamesInDirectory(path);
-                    } else {
-                        System.out.println(eachFile);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (eachFile.isDirectory()) {
+                    getAllFileNamesInDirectory(eachFile);
+                } else {
+                    System.out.println(eachFile);
                 }
             }
         }
