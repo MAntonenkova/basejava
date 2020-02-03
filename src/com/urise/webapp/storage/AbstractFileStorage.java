@@ -25,13 +25,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected File getSearchKey(String uuid) {
-        directoryIsNotEmpty();
         return new File(directory, uuid);
     }
 
     @Override
     protected void doUpdate(Resume resume, File fileSearchKey) {
-        directoryIsNotEmpty();
         try {
             doWrite(resume, fileSearchKey);
         } catch (IOException e) {
@@ -49,15 +47,23 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
     }
 
-    @Override
+   /* @Override
     protected void doDelete(File fileSearchKey) {
-        directoryIsNotEmpty();
         try {
-            fileSearchKey.delete();
+           Boolean wasDeleted = fileSearchKey.delete();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }*/
+
+    @Override
+    protected void doDelete(File fileSearchKey) {
+        Boolean wasDeleted = fileSearchKey.delete();
+        if (!wasDeleted) {
+            throw new StorageException("Delete error", fileSearchKey.getName());
+        }
     }
+
 
     @Override
     protected Resume doGet(File fileSearchKey) {
