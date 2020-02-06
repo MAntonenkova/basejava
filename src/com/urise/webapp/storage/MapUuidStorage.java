@@ -27,7 +27,7 @@ public class MapUuidStorage extends AbstractStorage<String> {
     }
 
     @Override
-    public List<Resume> doCopy() {
+    public List<Resume> doCopyAll() {
         return new ArrayList<>(hashMap.values());
     }
 

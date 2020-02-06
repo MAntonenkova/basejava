@@ -37,7 +37,7 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    public List<Resume> doCopy() {
+    public List<Resume> doCopyAll() {
         return new ArrayList<>(hashMap.values());
     }
 

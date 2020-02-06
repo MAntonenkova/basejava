@@ -38,9 +38,10 @@ public class MainFile {
         if (list != null) {
             for (File eachFile : list) {
                 if (eachFile.isDirectory()) {
+                    System.out.println("Directory: " + eachFile.getName());
                     getAllFileNamesInDirectory(eachFile);
-                } else {
-                    System.out.println(eachFile);
+                } else if (eachFile.isFile()) {
+                    System.out.println("    File: " + eachFile.getName());
                 }
             }
         }

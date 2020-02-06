@@ -1,5 +1,6 @@
 package com.urise.webapp.model;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,6 +10,10 @@ class OrganizationSection extends Section {
     OrganizationSection(List<Organization> organizations) {
         Objects.requireNonNull(organizations, "organizations must be not empty");
         this.organizations = organizations;
+    }
+
+    public OrganizationSection(Organization... organizations) {
+        this(Arrays.asList(organizations));
     }
 
     @Override
