@@ -2,10 +2,10 @@ package com.urise.webapp.model;
 
 import java.util.Objects;
 
-class TextSection extends Section {
+ public class TextSection extends Section {
     final private String content;
 
-    TextSection(String content) {
+   public TextSection(String content) {
         Objects.requireNonNull(content, "content must be not empty");
         this.content = content;
     }

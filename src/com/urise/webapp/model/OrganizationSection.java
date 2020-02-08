@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-class OrganizationSection extends Section {
+public class OrganizationSection extends Section {
     private final List<Organization> organizations;
 
     OrganizationSection(List<Organization> organizations) {
