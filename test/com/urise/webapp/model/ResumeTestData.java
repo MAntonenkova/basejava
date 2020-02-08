@@ -2,6 +2,7 @@ package com.urise.webapp.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -40,11 +41,13 @@ public class ResumeTestData {
 
         List<Organization> experienceList = new ArrayList<>();
 
-        Position position1 = new Position(LocalDate.of(1997, 9, 1),
+
+
+        Organization.Position position1 = new Organization.Position(LocalDate.of(1997, 9, 1),
                 LocalDate.of(2005, 1, 1), "Инженер по аппаратному и программному тестированию",
                 "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM).");
 
-        Position position2 = new Position(
+        Organization.Position position2 = new Organization.Position(
                 LocalDate.of(2005, 1, 1), LocalDate.of(2007, 2, 1),
                 "Разработчик ПО",
                 "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной IN платформе" +
@@ -59,24 +62,35 @@ public class ResumeTestData {
 
         List<Organization> educationList = new ArrayList<>();
 
-        Position position3 = new Position(LocalDate.of(1984, 9, 1),
+        Organization.Position position3 = new Organization.Position(LocalDate.of(1984, 9, 1),
                 LocalDate.of(1987, 6, 1), "Закончил с отличием",
                 null);
 
-        Position position4 = new Position(LocalDate.of(1993, 9, 1),
+        Organization.Position position4 = new Organization.Position(LocalDate.of(1993, 9, 1),
                 LocalDate.of(1996, 7, 1), "Аспирантура (программист С, С++)",
                 null);
 
-        Position position5 = new Position(LocalDate.of(1987, 9, 1),
+        Organization.Position position5 = new Organization.Position(LocalDate.of(1987, 9, 1),
                 LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)",
                 null);
 
-        List<Position> positions = new ArrayList<>();
+        List<Organization.Position> positions = new ArrayList<>();
         positions.add(position4);
         positions.add(position5);
 
+          /*         public Organization(String name, String url, Organization.Position... positions) {
+            this(new Link(name, url), Arrays.asList(positions));
+        }
+
+    public Organization(Link homePage, List< Organization.Position > positions) {
+            this.homePage = homePage;
+            this.positions = positions;
+        }*/
+
         Organization education1 = new Organization("Заочная физико-техническая школа при МФТИ",
-                "http://www.school.mipt.ru/", position3);
+                "http://www.school.mipt.ru/", new Organization.Position(LocalDate.of(1987, 9, 1),
+                LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)",
+                null));
 
         Organization education2 = new Organization(new Link("Санкт-Петербургский национальный исследовательский университет" +
                 "информационных технологий, механики и оптики",
