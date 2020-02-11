@@ -1,10 +1,13 @@
 package com.urise.webapp.model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class OrganizationSection extends Section {
+public class OrganizationSection extends Section implements Serializable {
+    private static final long serialVersionUID =1L;
+
     private final List<Organization> organizations;
 
     OrganizationSection(List<Organization> organizations) {

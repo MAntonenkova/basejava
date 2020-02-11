@@ -29,21 +29,38 @@ public class MainFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        File file2 = new File("D:\\_JAVA\\!Internship\\JavaOps\\basejava");
+        File file2 = new File("D:\\_JAVA");
         getAllFileNamesInDirectory(file2);
     }
 
     private static void getAllFileNamesInDirectory(File fileOrDir) {
         File[] list = fileOrDir.listFiles();
+        int countFile =0;
+        int countDir =0;
+        String spacebar = "    ";
         if (list != null) {
             for (File eachFile : list) {
+
                 if (eachFile.isDirectory()) {
+                    doSpace(countDir);
+                    countDir ++;
                     System.out.println("Directory: " + eachFile.getName());
                     getAllFileNamesInDirectory(eachFile);
                 } else if (eachFile.isFile()) {
-                    System.out.println("    File: " + eachFile.getName());
+                    doSpace(countFile);
+                    countFile ++;
+                    System.out.println(spacebar + "File: " + eachFile.getName());
                 }
             }
         }
+    }
+
+    private static void doSpace(int count){
+        StringBuilder builder = new StringBuilder();
+        String spacebar = "   ";
+        for (int i =0; i < count; i++) {
+            builder.append(spacebar);
+        }
+        System.out.print(builder);
     }
 }

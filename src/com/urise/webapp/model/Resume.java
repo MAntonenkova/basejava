@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Resume implements Serializable {
+    private static final long serialVersionUID =1L;
 
     private final String uuid;
     private final String fullName;

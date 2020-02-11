@@ -118,7 +118,7 @@ public class ResumeTestData {
 
         contacts.put(ContactType.PHONE, "+7(921) 855-0482");
         contacts.put(ContactType.SKYPE, "grigory.kislin");
-        contacts.put(ContactType.EMAIL, "gkislin@yandex.ru");
+        contacts.put(ContactType.MAIL, "gkislin@yandex.ru");
         contacts.put(ContactType.LINKEDINPROFIL, "https://www.linkedin.com/in/gkislin");
         contacts.put(ContactType.GITHUBPROFIL, "https://github.com/gkislin");
         contacts.put(ContactType.STACKOVERFLOWPROFIL, "https://stackoverflow.com/users/548473/grigory-kislin");

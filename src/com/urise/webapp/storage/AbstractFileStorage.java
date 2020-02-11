@@ -1,6 +1,5 @@
 package com.urise.webapp.storage;
 
-
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
@@ -21,7 +20,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     protected abstract Resume doRead(InputStream is) throws IOException;
 
-    protected AbstractFileStorage(File directory) {
+    AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
@@ -61,7 +60,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             doWrite(r, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
-            throw new StorageException("File write error", r.getUuid(), e);
+            throw new StorageException("File write error!!! I am ", r.getUuid(), e);
         }
     }
 
