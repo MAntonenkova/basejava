@@ -5,21 +5,21 @@ import com.urise.webapp.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamStorage extends AbstractFileStorage {
+public class ObjectStreamStorage extends AbstractFileStorage implements StrategyObjectStream{
 
     ObjectStreamStorage(File directory) {
         super(directory);
     }
 
     @Override
-    protected void doWrite(Resume resume, OutputStream outputStream) throws IOException {
+    public void doWrite(Resume resume, OutputStream outputStream) throws IOException {
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
             objectOutputStream.writeObject(resume);
         }
     }
 
     @Override
-    protected Resume doRead(InputStream inputStream) throws IOException {
+    public Resume doRead(InputStream inputStream) throws IOException {
         try (ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
             return (Resume) objectInputStream.readObject();
         } catch (ClassNotFoundException e) {

@@ -1,26 +1,29 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
-public class ObjectStreamPathStorage  extends AbstractPathStorage{
+public class ObjectStreamPathStorage  extends AbstractPathStorage implements StrategyObjectStream{
 
     public ObjectStreamPathStorage(String dir) {
         super(dir);
     }
 
     @Override
-    protected void doWrite(Resume resume, OutputStream outputStream) throws IOException {
+    public void doWrite(Resume resume, OutputStream outputStream) throws IOException {
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
             objectOutputStream.writeObject(resume);
         }
     }
 
     @Override
-    protected Resume doRead(InputStream is) throws IOException {
-        return null;
+    public Resume doRead(InputStream inputStream) throws IOException {
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
+            return (Resume) objectInputStream.readObject();
+        } catch (ClassNotFoundException e) {
+            throw new StorageException("Error read resume", null, e);
+        }
     }
 }
