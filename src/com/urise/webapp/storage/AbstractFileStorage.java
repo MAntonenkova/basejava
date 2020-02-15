@@ -29,6 +29,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
+
+        setStrategy(new ObjectStreamStorage(directory));
     }
 
     @Override

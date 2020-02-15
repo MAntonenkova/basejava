@@ -27,6 +27,13 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     protected abstract List<Resume> doCopyAll();
 
+
+    private StrategyReadWriteFile strategyReadWriteFile;
+
+    void setStrategy(StrategyReadWriteFile strategyReadWriteFile){
+        this.strategyReadWriteFile = strategyReadWriteFile;
+    }
+
     @Override
     public void update(Resume resume) {
         LOG.info("Update " + resume);

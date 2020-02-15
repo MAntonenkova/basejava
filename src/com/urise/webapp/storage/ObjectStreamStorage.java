@@ -5,7 +5,7 @@ import com.urise.webapp.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamStorage extends AbstractFileStorage implements StrategyObjectStream{
+public class ObjectStreamStorage extends AbstractFileStorage implements StrategyReadWriteFile {
 
     ObjectStreamStorage(File directory) {
         super(directory);

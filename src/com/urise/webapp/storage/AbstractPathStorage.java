@@ -29,7 +29,9 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory or it's not writable");
         }
+        setStrategy(new ObjectStreamPathStorage(dir));
     }
+
 
     @Override
     public void clear() {
