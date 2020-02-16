@@ -19,17 +19,21 @@ import java.util.stream.Collectors;
 public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     private Path directory;
 
-    protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
-
-    protected abstract Resume doRead(InputStream is) throws IOException;
-
     AbstractPathStorage(String dir) {
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory or it's not writable");
         }
-        setStrategy(new ObjectStreamPathStorage(dir));
+    }
+    private StrategyReadableWritebleFile strategyReadableWritebleFile = new ConcreteStrategyObjectStreamPathStorage(directory.toString());
+
+    protected void doWrite(Resume r, OutputStream os) throws IOException {
+        strategyReadableWritebleFile.doWrite(r, os);
+    }
+
+    protected Resume doRead(InputStream is) throws IOException {
+        return strategyReadableWritebleFile.doRead(is);
     }
 
 

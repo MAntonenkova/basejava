@@ -5,9 +5,9 @@ import com.urise.webapp.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamPathStorage  extends AbstractPathStorage implements StrategyReadWriteFile {
+public class ConcreteStrategyObjectStreamPathStorage extends AbstractPathStorage implements StrategyReadableWritebleFile {
 
-    public ObjectStreamPathStorage(String dir) {
+    public ConcreteStrategyObjectStreamPathStorage(String dir) {
         super(dir);
     }
 

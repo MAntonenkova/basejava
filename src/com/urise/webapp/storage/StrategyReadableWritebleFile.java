@@ -5,7 +5,7 @@ import com.urise.webapp.model.Resume;
 
 import java.io.*;
 
-public interface StrategyReadWriteFile {
+public interface StrategyReadableWritebleFile {
 
       void doWrite(Resume r, OutputStream os) throws IOException;
 
