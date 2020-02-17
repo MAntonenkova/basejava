@@ -16,19 +16,15 @@ import java.util.Objects;
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
     private File directory;
 
-    private StrategyReadableWritebleFile strategyReadableWritebleFile = new ConcreteStrategyObjectStreamStorage(directory);
+    StrategyReadableWritebleFile concreteStrategyObjectStreamStorage = new ConcreteStrategyObjectStreamStorage();
 
-    public void setStrategyReadableWritebleFile(StrategyReadableWritebleFile strategyReadableWritebleFile) {
-        this.strategyReadableWritebleFile = strategyReadableWritebleFile;
+    public void setConcreteStrategyObjectStreamStorage(StrategyReadableWritebleFile concreteStrategyObjectStreamStorage) {
+        this.concreteStrategyObjectStreamStorage = concreteStrategyObjectStreamStorage;
     }
 
-    protected void doWrite(Resume r, OutputStream os) throws IOException {
-        strategyReadableWritebleFile.doWrite(r, os);
-    }
+    protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
 
-    protected Resume doRead(InputStream is) throws IOException {
-        return strategyReadableWritebleFile.doRead(is);
-    }
+    protected abstract Resume doRead(InputStream is) throws IOException;
 
     AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
@@ -40,6 +36,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
         this.directory = directory;
     }
+
+
 
     @Override
     public void clear() {
