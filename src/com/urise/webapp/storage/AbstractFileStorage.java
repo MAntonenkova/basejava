@@ -16,17 +16,13 @@ import java.util.Objects;
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
     private File directory;
 
-    StrategyReadableWritebleFile concreteStrategyObjectStreamStorage = new ConcreteStrategyObjectStreamStorage();
-
-    public void setConcreteStrategyObjectStreamStorage(StrategyReadableWritebleFile concreteStrategyObjectStreamStorage) {
-        this.concreteStrategyObjectStreamStorage = concreteStrategyObjectStreamStorage;
-    }
+    StrategyReadableWritebleFile concreteStrategyObjectStreamStorage = new ConcreteStrategyReadWriteByObjectStream();
 
     protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
 
     protected abstract Resume doRead(InputStream is) throws IOException;
 
-    AbstractFileStorage(File directory) {
+    AbstractFileStorage(File directory, StrategyReadableWritebleFile concreteStrategyObjectStreamStorage) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
@@ -35,8 +31,18 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
+        this.concreteStrategyObjectStreamStorage = concreteStrategyObjectStreamStorage;
     }
 
+    public void performWrite(StrategyReadableWritebleFile concreteStrategyObjectStreamStorage, Resume r, OutputStream os) throws IOException {
+        concreteStrategyObjectStreamStorage = new ConcreteStrategyReadWriteByObjectStream();
+        concreteStrategyObjectStreamStorage.doWrite(r,os);
+    }
+
+    public void performRead(StrategyReadableWritebleFile concreteStrategyObjectStreamStorage, InputStream is) throws IOException {
+        concreteStrategyObjectStreamStorage = new ConcreteStrategyReadWriteByObjectStream();
+        concreteStrategyObjectStreamStorage.doRead(is);
+    }
 
 
     @Override

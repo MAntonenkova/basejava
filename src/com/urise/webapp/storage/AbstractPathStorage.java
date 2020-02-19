@@ -19,11 +19,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     private Path directory;
 
-    StrategyReadableWritebleFile concreteStrategyObjectStreamPathStorage = new ConcreteStrategyObjectStreamPathStorage();
-
-    public void setConcreteStrategyObjectStreamPathStorage(StrategyReadableWritebleFile concreteStrategyObjectStreamPathStorage) {
-        this.concreteStrategyObjectStreamPathStorage = concreteStrategyObjectStreamPathStorage;
-    }
+    StrategyReadableWritebleFile concreteStrategyObjectStreamStorage = new ConcreteStrategyReadWriteByObjectStream();
 
     AbstractPathStorage(String dir) {
         directory = Paths.get(dir);
@@ -31,7 +27,19 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory or it's not writable");
         }
+        this.concreteStrategyObjectStreamStorage = concreteStrategyObjectStreamStorage;
     }
+
+    public void performWrite(StrategyReadableWritebleFile concreteStrategyObjectStreamStorage, Resume r, OutputStream os) throws IOException {
+        concreteStrategyObjectStreamStorage = new ConcreteStrategyReadWriteByObjectStream();
+        concreteStrategyObjectStreamStorage.doWrite(r,os);
+    }
+
+    public void performRead(StrategyReadableWritebleFile concreteStrategyObjectStreamStorage, InputStream is) throws IOException {
+        concreteStrategyObjectStreamStorage = new ConcreteStrategyReadWriteByObjectStream();
+        concreteStrategyObjectStreamStorage.doRead(is);
+    }
+
 
     protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
 
