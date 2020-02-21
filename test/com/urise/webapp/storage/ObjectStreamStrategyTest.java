@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ConcreteStrategyReadWriteByObjectStreamTest {
+public class ObjectStreamStrategyTest {
 
     @Test
     public void doWrite() {

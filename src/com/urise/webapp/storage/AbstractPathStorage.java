@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     private Path directory;
 
-    StrategyReadableWritebleFile concreteStrategyObjectStreamStorage = new ConcreteStrategyReadWriteByObjectStream();
+    private Strategy concreteStrategyObjectStreamStorage;
 
-    AbstractPathStorage(String dir) {
+    AbstractPathStorage(String dir, Strategy concreteStrategyObjectStreamStorage) {
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
@@ -30,16 +30,15 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         this.concreteStrategyObjectStreamStorage = concreteStrategyObjectStreamStorage;
     }
 
-    public void performWrite(StrategyReadableWritebleFile concreteStrategyObjectStreamStorage, Resume r, OutputStream os) throws IOException {
-        concreteStrategyObjectStreamStorage = new ConcreteStrategyReadWriteByObjectStream();
-        concreteStrategyObjectStreamStorage.doWrite(r,os);
+   /* public void performWrite(Strategy concreteStrategyObjectStreamStorage, Resume r, OutputStream os) throws IOException {
+        concreteStrategyObjectStreamStorage = new ObjectStreamStrategy();
+        concreteStrategyObjectStreamStorage.doWrite(r, os);
     }
 
-    public void performRead(StrategyReadableWritebleFile concreteStrategyObjectStreamStorage, InputStream is) throws IOException {
-        concreteStrategyObjectStreamStorage = new ConcreteStrategyReadWriteByObjectStream();
+    public void performRead(Strategy concreteStrategyObjectStreamStorage, InputStream is) throws IOException {
+        concreteStrategyObjectStreamStorage = new ObjectStreamStrategy();
         concreteStrategyObjectStreamStorage.doRead(is);
-    }
-
+    }*/
 
     protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
 
@@ -73,7 +72,8 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Resume r, Path path) {
         try {
-            doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
+            concreteStrategyObjectStreamStorage.doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
+            // doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("File write error!!! I am ", r.getUuid(), e);
         }
@@ -97,7 +97,8 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return doRead(new BufferedInputStream(Files.newInputStream(path)));
+            return concreteStrategyObjectStreamStorage.doRead(new BufferedInputStream(Files.newInputStream(path)));
+            //  return doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("File read error", path.getFileName().toString(), e);
         }
@@ -114,7 +115,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        List listNew = new ArrayList();
+        List listNew;
         try {
             listNew = Files.list(directory).collect(Collectors.toList());
             return listNew;

@@ -5,10 +5,7 @@ import com.urise.webapp.model.Resume;
 
 import java.io.*;
 
-public class ConcreteStrategyReadWriteByObjectStream implements StrategyReadableWritebleFile {
-
-    public ConcreteStrategyReadWriteByObjectStream() {
-    }
+public class ObjectStreamStrategy implements Strategy {
 
     @Override
     public void doWrite(Resume resume, OutputStream outputStream) throws IOException {
