@@ -7,7 +7,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -16,12 +15,12 @@ import java.util.stream.Collectors;
  * gkislin
  * 22.07.2016
  */
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
 
     private Strategy concreteStrategyObjectStreamStorage;
 
-    AbstractPathStorage(String dir, Strategy concreteStrategyObjectStreamStorage) {
+    PathStorage(String dir, Strategy concreteStrategyObjectStreamStorage) {
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
@@ -29,31 +28,19 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         }
         this.concreteStrategyObjectStreamStorage = concreteStrategyObjectStreamStorage;
     }
-
-   /* public void performWrite(Strategy concreteStrategyObjectStreamStorage, Resume r, OutputStream os) throws IOException {
-        concreteStrategyObjectStreamStorage = new ObjectStreamStrategy();
-        concreteStrategyObjectStreamStorage.doWrite(r, os);
-    }
-
-    public void performRead(Strategy concreteStrategyObjectStreamStorage, InputStream is) throws IOException {
-        concreteStrategyObjectStreamStorage = new ObjectStreamStrategy();
-        concreteStrategyObjectStreamStorage.doRead(is);
-    }*/
-
+/*
     protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
 
-    protected abstract Resume doRead(InputStream is) throws IOException;
-
+    protected abstract Resume doRead(InputStream is) throws IOException;*/
 
     @Override
     public void clear() {
         try {
-            Files.list(directory).forEach(this::doDelete);
+           Files.list(directory).forEach(this::doDelete);
         } catch (IOException e) {
             throw new StorageException("Path delete error", null);
         }
     }
-
 
     @Override
     public int getSize() {
@@ -73,7 +60,6 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     protected void doUpdate(Resume r, Path path) {
         try {
             concreteStrategyObjectStreamStorage.doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
-            // doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("File write error!!! I am ", r.getUuid(), e);
         }
@@ -98,7 +84,6 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     protected Resume doGet(Path path) {
         try {
             return concreteStrategyObjectStreamStorage.doRead(new BufferedInputStream(Files.newInputStream(path)));
-            //  return doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("File read error", path.getFileName().toString(), e);
         }

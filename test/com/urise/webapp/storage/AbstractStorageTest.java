@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
@@ -15,9 +16,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractStorageTest {
-    static final File STORAGE_DIR = new File("D:\\_JAVA\\! BaseJava\\directoryForTest");
+
+    private static String pathName = "D:\\_JAVA\\! BaseJava\\directoryForTest";
+    static final File STORAGE_DIR = new File(pathName);
 
     protected Storage storage;
+
+    protected Path path;
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
@@ -28,6 +33,10 @@ public abstract class AbstractStorageTest {
     private static final Resume R2;
     private static final Resume R3;
     private static final Resume R4;
+
+    public static String getPathName() {
+        return pathName;
+    }
 
     static {
         R1 = new Resume(UUID_1, "Name1");
@@ -62,6 +71,10 @@ public abstract class AbstractStorageTest {
 
     AbstractStorageTest(Storage storage) {
         this.storage = storage;
+    }
+
+    public AbstractStorageTest() {
+
     }
 
     @Before

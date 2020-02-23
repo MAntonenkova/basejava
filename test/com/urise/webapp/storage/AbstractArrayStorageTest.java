@@ -10,7 +10,7 @@ import org.junit.Test;
  * 12.06.2016
  */
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
-    protected AbstractArrayStorageTest(Storage storage) {
+    AbstractArrayStorageTest(Storage storage) {
         super(storage);
     }
 
