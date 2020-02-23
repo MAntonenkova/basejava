@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Resume implements Serializable {
-    private static final long serialVersionUID =1L;
+    private static final long serialVersionUID = 1L;
 
     private final String uuid;
     private final String fullName;
@@ -40,11 +40,11 @@ public class Resume implements Serializable {
         return contacts;
     }
 
-  public String getContact (ContactType type){
-      return contacts.get(type);
-  }
+    public String getContact(ContactType type) {
+        return contacts.get(type);
+    }
 
-    public Section getSection (SectionType type){
+    public Section getSection(SectionType type) {
         return sections.get(type);
     }
 
