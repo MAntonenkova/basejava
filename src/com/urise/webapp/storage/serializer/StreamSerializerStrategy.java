@@ -1,10 +1,10 @@
-package com.urise.webapp.storage;
+package com.urise.webapp.storage.serializer;
 
 import com.urise.webapp.model.Resume;
 
 import java.io.*;
 
-public interface Strategy {
+public interface StreamSerializerStrategy {
 
     void doWrite(Resume r, OutputStream os) throws IOException;
 

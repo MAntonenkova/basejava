@@ -13,7 +13,7 @@ public class MapUuidStorage extends AbstractStorage<String> {
     }
 
     protected void doUpdate(Resume resume, String uuid) {
-        hashMap.put( uuid, resume);
+        hashMap.put(uuid, resume);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class MapUuidStorage extends AbstractStorage<String> {
 
     @Override
     protected void doDelete(String uuid) {
-        hashMap.remove( uuid);
+        hashMap.remove(uuid);
     }
 
     @Override

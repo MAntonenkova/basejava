@@ -30,10 +30,10 @@ public class MainFile {
             throw new RuntimeException(e);
         }
         File file2 = new File("D:\\_JAVA");
-        getAllFileNamesInDirectory(file2);
+        printDirectoryDeeply(file2);
     }
 
-    private static void getAllFileNamesInDirectory(File fileOrDir) {
+    private static void printDirectoryDeeply(File fileOrDir) {
         File[] list = fileOrDir.listFiles();
         int countFile =0;
         int countDir =0;
@@ -45,7 +45,7 @@ public class MainFile {
                     doSpace(countDir);
                     countDir ++;
                     System.out.println("Directory: " + eachFile.getName());
-                    getAllFileNamesInDirectory(eachFile);
+                    printDirectoryDeeply(eachFile);
                 } else if (eachFile.isFile()) {
                     doSpace(countFile);
                     countFile ++;
