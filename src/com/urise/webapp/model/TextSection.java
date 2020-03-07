@@ -1,14 +1,20 @@
 package com.urise.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serializable;
 import java.util.Objects;
+
 
  public class TextSection extends Section implements Serializable {
      private static final long serialVersionUID =1L;
 
-    final private String content;
+    private String content;
 
-   public TextSection(String content) {
+     public TextSection() {
+     }
+
+     public TextSection(String content) {
         Objects.requireNonNull(content, "content must be not empty");
         this.content = content;
     }
