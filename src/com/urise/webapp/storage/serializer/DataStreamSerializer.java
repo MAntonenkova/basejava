@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.urise.webapp.util.DateUtil.of;
 
 public class DataStreamSerializer implements StreamSerializerStrategy {
 
@@ -60,10 +59,18 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
                         List<Organization.Position> positions = organization.getPositions();    // получаем лист, где содержатся элементы: класс Organization
 
                         String name = homepage.getName();
+
+
                         String url = homepage.getUrl();
 
                         dataOutputStream.writeUTF(name);                 // 3.4 пишем name из Link
-                        dataOutputStream.writeUTF(url);                 // 3.5 пишем url из Link
+
+                        if (url != null) {
+                            dataOutputStream.writeUTF(url);                 // 3.5 пишем url из Link
+                        }
+                        else {
+                            dataOutputStream.writeUTF("");
+                        }
 
                         // для каждого элемента List <Position> positions
                         for (Organization.Position position : positions) {           // конструктор public Position(LocalDate startDate, LocalDate endDate, String title, String description)
@@ -81,8 +88,20 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
                             dataOutputStream.writeInt(startMonth);   // 3.8 пишем startMonth
                             dataOutputStream.writeInt(endYear);      // 3.9 пишем endYear
                             dataOutputStream.writeInt(endMonth);     // 3.10 пишем endMonth
-                            dataOutputStream.writeUTF(title);        // 3.11 пишем title
-                            dataOutputStream.writeUTF(description);  // 3.12 пишем description
+
+                            if (title != null) {
+                                dataOutputStream.writeUTF(title);        // 3.11 пишем title
+                            }
+                            else {
+                                dataOutputStream.writeUTF("");
+                            }
+
+                            if (description != null) {
+                                dataOutputStream.writeUTF(description);  // 3.12 пишем description
+                            }
+                            else {
+                                dataOutputStream.writeUTF("");
+                            }
                         }
                     }
                 }
@@ -121,6 +140,9 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
                         String name = dataInputStream.readUTF();                         //3.4 читаем name (String)
                         String url = dataInputStream.readUTF();                           //  3.5 читаем url (String)
 
+                        if (url.equals("")){
+                            url = null;
+                        }
                         Link homepage = new Link(name, url);                             // создаем  Link, содержащийся в каждом элементе листа <Organization>
 
                         List<Organization.Position> positions = new ArrayList<>();            // создаем  лист <Position>, содержащийся в каждом элементе листа <Organization>
@@ -136,7 +158,13 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
                             Month endMonth = Month.of(endMonthInt);
 
                             String title = dataInputStream.readUTF();     // 3.11 пишем title
+                            if (title.equals("")){
+                                title = null;
+                            }
                             String description = dataInputStream.readUTF();  // 3.12 пишем description
+                            if (description.equals("")){
+                                description = null;
+                            }
 
                             Organization.Position position = new Organization.Position(startYear, startMonth, endYear, endMonth, title, description);
 
