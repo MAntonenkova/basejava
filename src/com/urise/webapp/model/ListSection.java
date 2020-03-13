@@ -20,7 +20,7 @@ public class ListSection extends Section implements Serializable {
     public ListSection() {
     }
 
-    ListSection(List<String> items) {
+    public ListSection(List<String> items) {
         Objects.requireNonNull(items, "content must be not empty");
         this.items = items;
     }
