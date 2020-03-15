@@ -1,21 +1,23 @@
 package com.urise.webapp.storage.serializer;
 
-
+import com.google.gson.internal.bind.util.ISO8601Utils;
 import com.urise.webapp.model.*;
 
+import java.beans.Customizer;
 import java.io.*;
+
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
+import java.util.function.Consumer;
 
 public class DataStreamSerializer implements StreamSerializerStrategy {
 
     @Override
     public void doWrite(Resume resume, OutputStream outputStream) throws IOException {
         try (DataOutputStream dataOutputStream = new DataOutputStream(outputStream)) {
+
+
             dataOutputStream.writeUTF(resume.getUuid());
             dataOutputStream.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContacts();
@@ -24,8 +26,6 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
                 dataOutputStream.writeUTF(entry.getKey().name());
                 dataOutputStream.writeUTF(entry.getValue());
             }
-
-            // TODO implements section
 
             Map<SectionType, Section> sections = resume.getSections();
 
@@ -63,6 +63,7 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
                         // т.е. value = List<Organization> organizations
                         List<Organization> organizations = ((OrganizationSection) value).getOrganizations(); // получаем лист, где содержатся элементы: класс Organization
 
+
                         int sizeOrganizations = organizations.size();          // получаем размер этого листа (класс Organization) для read
                         dataOutputStream.writeInt(sizeOrganizations);         // 3.3 пишем размер этого листа (класс Organization) для read
 
@@ -77,14 +78,9 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
 
                             dataOutputStream.writeUTF(name);                 // 3.4 пишем name из Link
 
-                            if (url != null) {
-                                dataOutputStream.writeUTF(url);                 // 3.5 пишем url из Link
-                            } else {
-                                dataOutputStream.writeUTF("");
-                            }
+                            writeCheckNullString(outputStream, url);    // 3.5 пишем url
 
                             // для каждого элемента List <Position> positions
-
                             int positionsSize = positions.size();
 
                             dataOutputStream.writeInt(positionsSize);     //3.6 пишем размер листа Positions
@@ -98,27 +94,49 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
                                 String title = position.getTitle();
                                 String description = position.getDescription();
 
-                                dataOutputStream.writeInt(startYear);    // 3.7 пишем startYear
-                                dataOutputStream.writeInt(startMonth);   // 3.8 пишем startMonth
-                                dataOutputStream.writeInt(endYear);      // 3.9 пишем endYear
-                                dataOutputStream.writeInt(endMonth);     // 3.10 пишем endMonth
+                                writeDate(outputStream, startYear, startMonth);    // 3.7 пишем startYear   // 3.8 пишем startMonth
 
-                                if (title != null) {
-                                    dataOutputStream.writeUTF(title);        // 3.11 пишем title
-                                } else {
-                                    dataOutputStream.writeUTF("");
-                                }
+                                writeDate(outputStream, endYear, endMonth);   // 3.9 пишем endYear   // 3.10 пишем endMonth
 
-                                if (description != null) {
-                                    dataOutputStream.writeUTF(description);  // 3.12 пишем description
-                                } else {
-                                    dataOutputStream.writeUTF("");
-                                }
+                                writeCheckNullString(outputStream, title);   // 3.11 пишем title
+
+                                writeCheckNullString(outputStream, description);   // 3.12 пишем desctiption
+
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    private void writeCheckNullString(OutputStream outputStream, String str) throws IOException {
+        DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+        if (str != null) {
+            dataOutputStream.writeUTF(str);  // 3.12 пишем description
+        } else {
+            dataOutputStream.writeUTF("");
+        }
+    }
+
+    private void writeDate(OutputStream outputStream, int Year, int Month) throws IOException {
+        DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+        dataOutputStream.writeInt(Year);
+        dataOutputStream.writeInt(Month);
+        dataOutputStream.writeInt(1);
+    }
+
+    @FunctionalInterface
+    interface myCustomer extends Consumer {
+        default void accept() throws Exception {
+        }
+    }
+
+    public void writeWithException(Collection collection, myCustomer action, OutputStream outputStream) throws IOException {
+        DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+        Objects.requireNonNull(action);
+        for (Object element : collection) {
+            dataOutputStream.writeInt((Integer) element);
         }
     }
 
@@ -132,7 +150,6 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
             for (int i = 0; i < size; i++) {
                 resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
             }
-            // TODO implements section
 
             int sizeSections = dataInputStream.readInt();                // 1. читаем размер мапы с секциями
 
@@ -167,36 +184,24 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
                             String name = dataInputStream.readUTF();                         //3.4 читаем name (String)
                             String url = dataInputStream.readUTF();                           //  3.5 читаем url (String)
 
-                            if (url.equals("")) {
-                                url = null;
-                            }
-                            Link homepage = new Link(name, url);                             // создаем  Link, содержащийся в каждом элементе листа <Organization>
+                            Link homepage = new Link(name, isNotNull(url));                             // создаем  Link, содержащийся в каждом элементе листа <Organization>
 
                             List<Organization.Position> positions = new ArrayList<>();            // создаем  лист <Position>, содержащийся в каждом элементе листа <Organization>
                             int positionsSize = dataInputStream.readInt();      //  3.6 читаем размер листа positions <Position>
 
                             for (int k = 0; k < positionsSize; k++) {           // для каждого элемента Position листа positions читаем
-                                int startYear = dataInputStream.readInt();         // // 3.7 читаем startYear
-                                int startMonthInt = dataInputStream.readInt();        // 3.8 читаем startMonth
-                                Month startMonth = Month.of(startMonthInt);
 
-                                int endYear = dataInputStream.readInt();             // 3.9 читаем endYear
-                                int endMonthInt = dataInputStream.readInt();           // 3.10 читаем endMonth
-                                Month endMonth = Month.of(endMonthInt);
+                                LocalDate startDate = readDate(inputStream);
+                                LocalDate endDate = readDate(inputStream);
 
                                 String title = dataInputStream.readUTF();     // 3.11 пишем title
-                                if (title.equals("")) {
-                                    title = null;
-                                }
                                 String description = dataInputStream.readUTF();  // 3.12 пишем description
-                                if (description.equals("")) {
-                                    description = null;
-                                }
 
-                                Organization.Position position = new Organization.Position(startYear, startMonth, endYear, endMonth, title, description);
+                                Organization.Position position = new Organization.Position(startDate, endDate, isNotNull(title), isNotNull(description));
 
                                 positions.add(position);
-                            }                   // для каждого элемента Position листа positions закрываем, лист positions собран
+                            }
+                            // для каждого элемента Position листа positions закрываем, лист positions собран
                             Organization organization = new Organization(homepage, positions);
                             organizations.add(organization);     //  лист organizatins <Organization> собран
                         }
@@ -206,5 +211,20 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
             }
             return resume;
         }
+    }
+
+    private String isNotNull(String str) {
+        if (str.equals("")) {
+            return null;
+        }
+        return str;
+    }
+
+    private LocalDate readDate(InputStream inputStream) throws IOException {
+        DataInputStream dataInputStream = new DataInputStream(inputStream);
+        int year = dataInputStream.readInt();
+        int month = dataInputStream.readInt();           // читаем Month
+        int day = dataInputStream.readInt();
+        return LocalDate.of(year, month, day);
     }
 }
