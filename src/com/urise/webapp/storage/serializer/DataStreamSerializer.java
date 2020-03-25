@@ -132,7 +132,7 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
             String fullName = dataInputStream.readUTF();
             Resume resume = new Resume(uuid, fullName);
             //   int size = dataInputStream.readInt();
-            readMain(resume, dataInputStream, new ElementMain() {
+            readMain(dataInputStream, new ElementMain() {
                 @Override
                 public void read() throws IOException {
                     resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
@@ -144,7 +144,7 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
 
             //      int sizeSections = dataInputStream.readInt();                // 1. читаем размер мапы с секциями
 
-            readMain(resume, dataInputStream, new ElementMain() {
+            readMain( dataInputStream, new ElementMain() {
                 @Override
                 public void read() throws IOException {
 
@@ -250,7 +250,7 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
         return list;
     }
 
-    private <T> void readMain(Resume resume, DataInputStream dataInputStream, ElementMain reader) throws IOException {
+    private <T> void readMain(DataInputStream dataInputStream, ElementMain reader) throws IOException {
         int size = dataInputStream.readInt();
         for (int i = 0; i < size; i++) {
             reader.read();
