@@ -140,6 +140,7 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
             int sizeSections = dataInputStream.readInt();                // 1. читаем размер мапы с секциями
 
             for (int i = 0; i < sizeSections; i++) {
+
                 String keyName = dataInputStream.readUTF();                 // 2.1 читаем значение Key
                 switch (keyName) {
                     case "PERSONAL":
@@ -149,46 +150,49 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
 
                     case "ACHIEVEMENT":
                     case "QUALIFICATIONS":
-                        int itemSize = dataInputStream.readInt();               // 2.3 читаем значение itemSize
 
                         List<String> items = new ArrayList<>();
-                        for (int j = 0; j < itemSize; j++) {
-                            items.add(dataInputStream.readUTF());     // 3.2 читаем значение value
-                        }
                         resume.addSection(SectionType.valueOf(keyName), new ListSection(items));    // 3.2 читаем значение value
+
+                        readCollection(items, dataInputStream, new ElementReader<String>() {
+                            @Override
+                            public String read() throws IOException {
+                                return dataInputStream.readUTF();
+                            }
+                        });
 
                         break;
                     case "EXPERIENCE":
                     case "EDUCATION":
-
-                        int organizationsSize = dataInputStream.readInt();                   // 3.3 читаем размер значения value листа с <class Organization>
-
                         List<Organization> organizations = new ArrayList<>();
-                        for (int j = 0; j < organizationsSize; j++) {                   // для каждого элемента листа <Organization>
 
-                            String name = dataInputStream.readUTF();                         //3.4 читаем name (String)
-                            String url = dataInputStream.readUTF();                           //  3.5 читаем url (String)
+                        readCollection(organizations, dataInputStream, new ElementReader<Organization>() {
+                            @Override
+                            public Organization read() throws IOException {
 
-                            Link homepage = new Link(name, isNotNull(url));                             // создаем  Link, содержащийся в каждом элементе листа <Organization>
+                                String name = dataInputStream.readUTF();                         //3.4 читаем name (String)
+                                String url = dataInputStream.readUTF();                           //  3.5 читаем url (String)
 
-                            List<Organization.Position> positions = new ArrayList<>();            // создаем  лист <Position>, содержащийся в каждом элементе листа <Organization>
-                            int positionsSize = dataInputStream.readInt();      //  3.6 читаем размер листа positions <Position>
+                                Link homepage = new Link(name, isNotNull(url));                             // создаем  Link, содержащийся в каждом элементе листа <Organization>
 
-                            for (int k = 0; k < positionsSize; k++) {           // для каждого элемента Position листа positions читаем
+                                List<Organization.Position> positions = new ArrayList<>();            // создаем  лист <Position>, содержащийся в каждом элементе листа <Organization>
 
-                                LocalDate startDate = readDate(inputStream);
-                                LocalDate endDate = readDate(inputStream);
+                                readCollection(positions, dataInputStream, new ElementReader<Organization.Position>() {
+                                    @Override
+                                    public Organization.Position read() throws IOException {
+                                        LocalDate startDate = readDate(inputStream);
+                                        LocalDate endDate = readDate(inputStream);
 
-                                String title = dataInputStream.readUTF();     // 3.11 пишем title
-                                String description = dataInputStream.readUTF();  // 3.12 пишем description
+                                        String title = dataInputStream.readUTF();     // 3.11 пишем title
+                                        String description = dataInputStream.readUTF();  // 3.12 пишем description
 
-                                Organization.Position position = new Organization.Position(startDate, endDate, isNotNull(title), isNotNull(description));
+                                        return new Organization.Position(startDate, endDate, isNotNull(title), isNotNull(description));
+                                    }
+                                });
 
-                                positions.add(position);
+                                return new Organization(homepage, positions);
                             }
-                            Organization organization = new Organization(homepage, positions);
-                            organizations.add(organization);     //  лист organizatins <Organization> собран
-                        }
+                        });
                         resume.addSection(SectionType.valueOf(keyName), new OrganizationSection(organizations));
                         break;
                 }
@@ -210,5 +214,17 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
         int month = dataInputStream.readInt();           // читаем Month
         int day = dataInputStream.readInt();
         return LocalDate.of(year, month, day);
+    }
+
+    interface ElementReader<T> {
+        T read() throws IOException;
+    }
+
+    private <T> void readCollection(List<T> list, DataInputStream dataInputStream, ElementReader<T> reader) throws IOException {
+        // List<T> list = new ArrayList<>();
+        int size = dataInputStream.readInt();
+        for (int i = 0; i < size; i++) {
+            list.add(reader.read());
+        }
     }
 }
