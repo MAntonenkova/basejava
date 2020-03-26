@@ -131,35 +131,26 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
             String uuid = dataInputStream.readUTF();
             String fullName = dataInputStream.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            //   int size = dataInputStream.readInt();
             readMain(dataInputStream, new ElementMain() {
                 @Override
                 public void read() throws IOException {
                     resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
                 }
             });
-           /* for (int i = 0; i < size; i++) {
-                resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
-            }*/
 
-            //      int sizeSections = dataInputStream.readInt();                // 1. читаем размер мапы с секциями
-
-            readMain( dataInputStream, new ElementMain() {
+            readMain(dataInputStream, new ElementMain() {
                 @Override
                 public void read() throws IOException {
 
-
-                    //      for (int i = 0; i < sizeSections; i++) {
-                    String keyName = dataInputStream.readUTF();                 // 2.1 читаем значение Key
+                    String keyName = dataInputStream.readUTF();
                     switch (keyName) {
                         case "PERSONAL":
                         case "OBJECTIVE":
-                            resume.addSection(SectionType.valueOf(keyName), new TextSection(dataInputStream.readUTF()));   // 3.1 читаем значение value
+                            resume.addSection(SectionType.valueOf(keyName), new TextSection(dataInputStream.readUTF()));
                             break;
 
                         case "ACHIEVEMENT":
                         case "QUALIFICATIONS":
-                            //         int itemSize = dataInputStream.readInt();               // 2.3 читаем значение itemSize
 
                             List<String> items = new ArrayList<>();
                             resume.addSection(SectionType.valueOf(keyName), new ListSection(items));    // 3.2 читаем значение value
@@ -176,41 +167,33 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
                         case "EDUCATION":
                             List<Organization> organizations = new ArrayList<>();
 
-                            readCollection(organizations, dataInputStream, new ElementReader<Organization>() {
-                                @Override
-                                public Organization read() throws IOException {
+                            readCollection(organizations, dataInputStream, () -> {
 
-                                    String name = dataInputStream.readUTF();                         //3.4 читаем name (String)
-                                    String url = dataInputStream.readUTF();                           //  3.5 читаем url (String)
+                                String name = dataInputStream.readUTF();
+                                String url = dataInputStream.readUTF();
 
-                                    Link homepage = new Link(name, isNotNull(url));                             // создаем  Link, содержащийся в каждом элементе листа <Organization>
+                                Link homepage = new Link(name, isNotNull(url));
 
-                                    List<Organization.Position> positions = new ArrayList<>();            // создаем  лист <Position>, содержащийся в каждом элементе листа <Organization>
+                                List<Organization.Position> positions = new ArrayList<>();
 
-                                    readCollection(positions, dataInputStream, new ElementReader<Organization.Position>() {
-                                        @Override
-                                        public Organization.Position read() throws IOException {
-                                            LocalDate startDate = readDate(inputStream);
-                                            LocalDate endDate = readDate(inputStream);
+                                readCollection(positions, dataInputStream, new ElementReader<Organization.Position>() {
+                                    @Override
+                                    public Organization.Position read() throws IOException {
+                                        LocalDate startDate = readDate(inputStream);
+                                        LocalDate endDate = readDate(inputStream);
 
-                                            String title = dataInputStream.readUTF();     // 3.11 пишем title
-                                            String description = dataInputStream.readUTF();  // 3.12 пишем description
+                                        String title = dataInputStream.readUTF();
+                                        String description = dataInputStream.readUTF();
 
-                                            return new Organization.Position(startDate, endDate, isNotNull(title), isNotNull(description));
-                                        }
-                                    });
+                                        return new Organization.Position(startDate, endDate, isNotNull(title), isNotNull(description));
+                                    }
+                                });
 
-                                    return new Organization(homepage, positions);
-                                }
+                                return new Organization(homepage, positions);
                             });
                             resume.addSection(SectionType.valueOf(keyName), new OrganizationSection(organizations));
                             break;
                     }
-
-
-                    //      }         // last }
-
-
                 }
             });
 
@@ -250,7 +233,7 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
         return list;
     }
 
-    private <T> void readMain(DataInputStream dataInputStream, ElementMain reader) throws IOException {
+    private void readMain(DataInputStream dataInputStream, ElementMain reader) throws IOException {
         int size = dataInputStream.readInt();
         for (int i = 0; i < size; i++) {
             reader.read();
