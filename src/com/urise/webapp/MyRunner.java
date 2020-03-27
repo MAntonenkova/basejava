@@ -9,6 +9,11 @@ class MyRunner {
             synchronized (line1) {
                 synchronized (line2) {
                     System.out.println(line1);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
