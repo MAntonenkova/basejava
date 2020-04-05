@@ -1,5 +1,6 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.Config;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.*;
@@ -17,8 +18,14 @@ import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractStorageTest {
 
-    private static String pathName = "D:\\_JAVA\\! BaseJava\\directoryForTest";
-    static final File STORAGE_DIR = new File(pathName);
+  //  private static String pathName = "D:\\_JAVA\\!Internship\\JavaOps\\basejava\\storageResumes";
+
+    //D:\_JAVA\!Internship\JavaOps\basejava\storageResumes
+    //D:\_JAVA\! BaseJava\directoryForTest
+
+    //static final File STORAGE_DIR = new File(pathName);
+    static final File STORAGE_DIR = Config.get().getStorageDir();
+    private static String pathName = STORAGE_DIR.getAbsolutePath();
 
     protected Storage storage;
 
@@ -44,7 +51,7 @@ public abstract class AbstractStorageTest {
         R3 = new Resume(UUID_3, "Name3");
         R4 = new Resume(UUID_4, "Name4");
 
-        R1.addContact(ContactType.MAIL, "mail1@ya.ru");
+   /*     R1.addContact(ContactType.MAIL, "mail1@ya.ru");
         R1.addContact(ContactType.PHONE, "11111");
         R1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
         R1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
@@ -66,7 +73,7 @@ public abstract class AbstractStorageTest {
        R1.addSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Organization2", "http://Organization2.ru",
-                                new Organization.Position(2015, Month.JANUARY, "position1", "content1"))));
+                                new Organization.Position(2015, Month.JANUARY, "position1", "content1"))));*/
     }
 
     AbstractStorageTest(Storage storage) {

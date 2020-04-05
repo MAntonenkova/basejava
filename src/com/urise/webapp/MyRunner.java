@@ -10,7 +10,7 @@ class MyRunner {
                 synchronized (line2) {
                     System.out.println(line1);
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(80);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

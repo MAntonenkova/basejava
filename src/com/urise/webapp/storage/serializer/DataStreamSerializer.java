@@ -28,68 +28,48 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
             writeCollection(sections.entrySet(), dataOutputStream, new elementWriter<Map.Entry<SectionType, Section>>() {
                 @Override
                 public void write(Map.Entry<SectionType, Section> sectionTypeSectionEntry) throws IOException {
-                    //      for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {  // начало основного цикла, проходим по всем эл-там мапы Map<SectionType, Secton> sections
-                    SectionType key = sectionTypeSectionEntry.getKey();                 // определяем значение Key, т.е. Section Type
-                    Section value = sectionTypeSectionEntry.getValue();                 // определяем value, т.е. в самом сложном случае лист Organization Sections
+                    SectionType key = sectionTypeSectionEntry.getKey();
+                    Section value = sectionTypeSectionEntry.getValue();
 
-                    dataOutputStream.writeUTF(key.name());  // пишем key, имя этой секции, например EDUCATION = "Образование"
+                    dataOutputStream.writeUTF(key.name());
 
                     switch (key) {
-                        case PERSONAL:                                              // случай с value = TextSection
+                        case PERSONAL:
                         case OBJECTIVE: {
-
-                            dataOutputStream.writeUTF(((TextSection) value).getContent());             // 3.1 пишем значение value
+                            dataOutputStream.writeUTF(((TextSection) value).getContent());
                         }
                         break;
-
-                        case ACHIEVEMENT:                                            // случай с value = ListSection
+                        case ACHIEVEMENT:
                         case QUALIFICATIONS: {
-
                             List<String> items = ((ListSection) value).getItems();
-                            writeCollection(items, dataOutputStream, new elementWriter<String>() {
-                                @Override
-                                public void write(String s) throws IOException {
-                                    dataOutputStream.writeUTF(s);
-                                }
-                            });
+                            writeCollection(items, dataOutputStream, dataOutputStream::writeUTF);
                         }
                         break;
-
-                        case EXPERIENCE:                                   // самый сложный случай с value = OrganizationSection
+                        case EXPERIENCE:
                         case EDUCATION: {
-                            // т.е. value = List<Organization> organizations
-                            List<Organization> organizations = ((OrganizationSection) value).getOrganizations(); // получаем лист, где содержатся элементы: класс Organization
+                            List<Organization> organizations = ((OrganizationSection) value).getOrganizations();
+                            writeCollection(organizations, dataOutputStream, organization -> {
+                                Link homepage = organization.getHomePage();                         // получаем элементы этого класса, Link и лист <Position>
+                                List<Organization.Position> positions = organization.getPositions();    // получаем лист, где содержатся элементы: класс Organization
+                                String name = homepage.getName();
+                                String url = homepage.getUrl();
+                                dataOutputStream.writeUTF(name);                 // 3.4 пишем name из Link
+                                writeCheckNullString(dataOutputStream, url);    // 3.5 пишем url
 
-                            writeCollection(organizations, dataOutputStream, new elementWriter<Organization>() {
-                                @Override
-                                public void write(Organization organization) throws IOException {
+                                writeCollection(positions, dataOutputStream, position -> {
 
-                                    Link homepage = organization.getHomePage();                         // получаем элементы этого класса, Link и лист <Position>
-                                    List<Organization.Position> positions = organization.getPositions();    // получаем лист, где содержатся элементы: класс Organization
-                                    String name = homepage.getName();
-                                    String url = homepage.getUrl();
-                                    dataOutputStream.writeUTF(name);                 // 3.4 пишем name из Link
-                                    writeCheckNullString(dataOutputStream, url);    // 3.5 пишем url
+                                    int startYear = position.getStartDate().getYear();
+                                    int startMonth = position.getStartDate().getMonthValue();
+                                    int endYear = position.getEndDate().getYear();
+                                    int endMonth = position.getEndDate().getMonthValue();
+                                    String title = position.getTitle();
+                                    String description = position.getDescription();
 
-
-                                    writeCollection(positions, dataOutputStream, new elementWriter<Organization.Position>() {
-                                        @Override
-                                        public void write(Organization.Position position) throws IOException {
-
-                                            int startYear = position.getStartDate().getYear();
-                                            int startMonth = position.getStartDate().getMonthValue();
-                                            int endYear = position.getEndDate().getYear();
-                                            int endMonth = position.getEndDate().getMonthValue();
-                                            String title = position.getTitle();
-                                            String description = position.getDescription();
-
-                                            writeDate(dataOutputStream, startYear, startMonth);    // 3.7 пишем startYear   // 3.8 пишем startMonth
-                                            writeDate(dataOutputStream, endYear, endMonth);   // 3.9 пишем endYear   // 3.10 пишем endMonth
-                                            writeCheckNullString(dataOutputStream, title);   // 3.11 пишем title
-                                            writeCheckNullString(dataOutputStream, description);   // 3.12 пишем desctiption
-                                        }
-                                    });
-                                }
+                                    writeDate(dataOutputStream, startYear, startMonth);
+                                    writeDate(dataOutputStream, endYear, endMonth);   // 3.9 пишем endYear   // 3.10 пишем endMonth
+                                    writeCheckNullString(dataOutputStream, title);   // 3.11 пишем title
+                                    writeCheckNullString(dataOutputStream, description);   // 3.12 пишем desctiption
+                                });
                             });
                         }
                     }
@@ -99,16 +79,14 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
     }
 
     private void writeCheckNullString(DataOutputStream dataOutputStream, String str) throws IOException {
-        //  DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
         if (str != null) {
-            dataOutputStream.writeUTF(str);  // 3.12 пишем description
+            dataOutputStream.writeUTF(str);
         } else {
             dataOutputStream.writeUTF("");
         }
     }
 
     private void writeDate(DataOutputStream dataOutputStream, int Year, int Month) throws IOException {
-        //   DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
         dataOutputStream.writeInt(Year);
         dataOutputStream.writeInt(Month);
         dataOutputStream.writeInt(1);
@@ -138,62 +116,45 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
                 }
             });
 
-            readMain(dataInputStream, new ElementMain() {
-                @Override
-                public void read() throws IOException {
 
-                    String keyName = dataInputStream.readUTF();
-                    switch (keyName) {
-                        case "PERSONAL":
-                        case "OBJECTIVE":
-                            resume.addSection(SectionType.valueOf(keyName), new TextSection(dataInputStream.readUTF()));
-                            break;
+            readMain(dataInputStream, () -> {
+                String keyName = dataInputStream.readUTF();
+                switch (keyName) {
+                    case "PERSONAL":
+                    case "OBJECTIVE":
+                        resume.addSection(SectionType.valueOf(keyName), new TextSection(dataInputStream.readUTF()));
+                        break;
 
-                        case "ACHIEVEMENT":
-                        case "QUALIFICATIONS":
+                    case "ACHIEVEMENT":
+                    case "QUALIFICATIONS":
+                        List<String> items = new ArrayList<>();
+                        resume.addSection(SectionType.valueOf(keyName), new ListSection(items));
+                        readCollection(items, dataInputStream, dataInputStream::readUTF);
+                        break;
+                    case "EXPERIENCE":
+                    case "EDUCATION":
+                        List<Organization> organizations = new ArrayList<>();
 
-                            List<String> items = new ArrayList<>();
-                            resume.addSection(SectionType.valueOf(keyName), new ListSection(items));    // 3.2 читаем значение value
+                        readCollection(organizations, dataInputStream, () -> {
 
-                            readCollection(items, dataInputStream, new ElementReader<String>() {
-                                @Override
-                                public String read() throws IOException {
-                                    return dataInputStream.readUTF();
-                                }
+                            String name = dataInputStream.readUTF();
+                            String url = dataInputStream.readUTF();
+                            Link homepage = new Link(name, isNotNull(url));
+                            List<Organization.Position> positions = new ArrayList<>();
+                            readCollection(positions, dataInputStream, () -> {
+                                LocalDate startDate = readDate(inputStream);
+                                LocalDate endDate = readDate(inputStream);
+
+                                String title = dataInputStream.readUTF();
+                                String description = dataInputStream.readUTF();
+
+                                return new Organization.Position(startDate, endDate, isNotNull(title), isNotNull(description));
                             });
 
-                            break;
-                        case "EXPERIENCE":
-                        case "EDUCATION":
-                            List<Organization> organizations = new ArrayList<>();
-
-                            readCollection(organizations, dataInputStream, () -> {
-
-                                String name = dataInputStream.readUTF();
-                                String url = dataInputStream.readUTF();
-
-                                Link homepage = new Link(name, isNotNull(url));
-
-                                List<Organization.Position> positions = new ArrayList<>();
-
-                                readCollection(positions, dataInputStream, new ElementReader<Organization.Position>() {
-                                    @Override
-                                    public Organization.Position read() throws IOException {
-                                        LocalDate startDate = readDate(inputStream);
-                                        LocalDate endDate = readDate(inputStream);
-
-                                        String title = dataInputStream.readUTF();
-                                        String description = dataInputStream.readUTF();
-
-                                        return new Organization.Position(startDate, endDate, isNotNull(title), isNotNull(description));
-                                    }
-                                });
-
-                                return new Organization(homepage, positions);
-                            });
-                            resume.addSection(SectionType.valueOf(keyName), new OrganizationSection(organizations));
-                            break;
-                    }
+                            return new Organization(homepage, positions);
+                        });
+                        resume.addSection(SectionType.valueOf(keyName), new OrganizationSection(organizations));
+                        break;
                 }
             });
 
@@ -211,7 +172,7 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
     private LocalDate readDate(InputStream inputStream) throws IOException {
         DataInputStream dataInputStream = new DataInputStream(inputStream);
         int year = dataInputStream.readInt();
-        int month = dataInputStream.readInt();           // читаем Month
+        int month = dataInputStream.readInt();
         int day = dataInputStream.readInt();
         return LocalDate.of(year, month, day);
     }
@@ -224,13 +185,11 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
         void read() throws IOException;
     }
 
-    private <T> List<T> readCollection(List<T> list, DataInputStream dataInputStream, ElementReader<T> reader) throws IOException {
-        // List<T> list = new ArrayList<>();
+    private <T> void readCollection(List<T> list, DataInputStream dataInputStream, ElementReader<T> reader) throws IOException {
         int size = dataInputStream.readInt();
         for (int i = 0; i < size; i++) {
             list.add(reader.read());
         }
-        return list;
     }
 
     private void readMain(DataInputStream dataInputStream, ElementMain reader) throws IOException {
