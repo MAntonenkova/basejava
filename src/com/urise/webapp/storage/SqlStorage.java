@@ -7,10 +7,11 @@ import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.ConnectionFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SqlStorage implements Storage {
-    public final ConnectionFactory connectionFactory;
+    private final ConnectionFactory connectionFactory;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         connectionFactory = () -> DriverManager.getConnection(dbUrl, dbUser, dbPassword);
@@ -28,7 +29,14 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE resume SET full_name = (?) WHERE uuid = (?)")) {
+            preparedStatement.setString(1, resume.getFullName());
+            preparedStatement.setString(2, resume.getUuid());
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 
     @Override
@@ -45,7 +53,13 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM resume r WHERE r.uuid = (?)")) {
+            preparedStatement.setString(1, uuid);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 
     @Override
@@ -58,8 +72,7 @@ public class SqlStorage implements Storage {
             if (!resultSet.next()) {
                 throw new NotExistStorageException(uuid);
             }
-            Resume resume = new Resume("uuid", resultSet.getString("full_name"));
-            return resume;
+            return new Resume("uuid", resultSet.getString("full_name"));
         } catch (SQLException e) {
             throw new StorageException(e);
         }
@@ -67,11 +80,32 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return null;
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM resume")) {
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Resume> resumes = new ArrayList<>();
+            while (resultSet.next()) {
+                resumes.add(new Resume("uuid", resultSet.getString("full_name")));
+            }
+            return resumes;
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 
     @Override
     public int getSize() {
-        return 0;
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM resume ")) {
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                return resultSet.getInt(1);
+            }
+            return 0;
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 }
