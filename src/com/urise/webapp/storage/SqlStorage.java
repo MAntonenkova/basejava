@@ -55,7 +55,10 @@ public class SqlStorage implements Storage {
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM resume r WHERE r.uuid = (?)")) {
             preparedStatement.setString(1, uuid);
-            preparedStatement.execute();
+            int i = preparedStatement.executeUpdate();
+            if (i == 0) {
+                throw new NotExistStorageException(uuid);
+            }
         } catch (SQLException e) {
             throw new StorageException(e);
         }
@@ -64,13 +67,13 @@ public class SqlStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM resume r WHERE r.uuid = ?")) {
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM resume r WHERE r.uuid =?")) {
             preparedStatement.setString(1, uuid);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.next()) {
                 throw new NotExistStorageException(uuid);
             }
-            return new Resume("uuid", resultSet.getString("full_name"));
+            return new Resume(uuid, resultSet.getString("full_name"));
         } catch (SQLException e) {
             throw new StorageException(e);
         }
@@ -80,11 +83,11 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM resume")) {
-            preparedStatement.execute();
+           // preparedStatement.execute();
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Resume> resumes = new ArrayList<>();
             while (resultSet.next()) {
-                resumes.add(new Resume("uuid", resultSet.getString("full_name")));
+                resumes.add(new Resume(resultSet.getString("uuid"), resultSet.getString("full_name")));
             }
             return resumes;
         } catch (SQLException e) {
