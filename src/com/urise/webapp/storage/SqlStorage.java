@@ -82,7 +82,7 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM resume")) {
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM resume ORDER BY uuid")) {
            // preparedStatement.execute();
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Resume> resumes = new ArrayList<>();
