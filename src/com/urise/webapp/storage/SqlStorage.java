@@ -1,9 +1,12 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.ConnectionFactory;
+import org.postgresql.util.PSQLException;
+import org.postgresql.util.PSQLState;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -44,7 +47,14 @@ public class SqlStorage implements Storage {
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)")) {
             preparedStatement.setString(1, resume.getUuid());
             preparedStatement.setString(2, resume.getFullName());
-            preparedStatement.execute();
+            int i = preparedStatement.executeUpdate();
+            if (i == 0) {
+                throw new ExistStorageException(resume.getUuid());
+            }
+        } catch (PSQLException e) {
+            if (e.getSQLState().equals("23505")) {
+                throw new ExistStorageException(resume.getUuid());
+            }
         } catch (SQLException e) {
             throw new StorageException(e);
         }
@@ -83,7 +93,7 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM resume ORDER BY uuid")) {
-           // preparedStatement.execute();
+            // preparedStatement.execute();
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Resume> resumes = new ArrayList<>();
             while (resultSet.next()) {
