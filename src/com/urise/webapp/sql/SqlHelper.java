@@ -1,5 +1,6 @@
 package com.urise.webapp.sql;
 
+import com.urise.webapp.Config;
 import com.urise.webapp.exception.StorageException;
 
 import java.sql.Connection;
@@ -14,7 +15,7 @@ public class SqlHelper {
     }
 
     public void execute(String sql) {
-        execute(sql, preparedStatement -> preparedStatement.execute());
+        execute(sql, PreparedStatement::execute);
     }
 
     public <T> T execute(String sql, SqlExecutor<T> executor) {
@@ -23,6 +24,22 @@ public class SqlHelper {
             return executor.execute(preparedStatement);
         } catch (SQLException e) {
             throw ExceptionUtil.convertException(e);
+        }
+    }
+
+    public <T> T transactionExecute (SqlTransaction<T> executor){
+        try (Connection connection = connectionFactory.getConnection()){
+            try{
+                connection.setAutoCommit(false);
+                T res = executor.execute(connection);
+                connection.commit();
+                return res;
+            } catch (SQLException e){
+                connection.rollback();
+                throw ExceptionUtil.convertException(e);
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
         }
     }
 }
