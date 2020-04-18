@@ -28,7 +28,7 @@ public class SqlStorage implements Storage {
     }
 
 
-    @Override
+    @Override    // написала
     public void update(Resume resume) {
         sqlHelper.<Void>execute("UPDATE resume SET full_name = (?) WHERE uuid = (?)", preparedStatement -> {
             preparedStatement.setString(1, resume.getFullName());
@@ -39,10 +39,19 @@ public class SqlStorage implements Storage {
             }
             return null;
         });
+
+        sqlHelper.execute("UPDATE contact SET type = (?), value = (?) WHERE resume_uuid = (?)", preparedStatement -> {
+            for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
+                preparedStatement.setString(1, e.getKey().name());
+                preparedStatement.setString(2, e.getValue());
+                preparedStatement.setString(3, resume.getUuid());
+                preparedStatement.addBatch();
+            }   return null;
+        });
     }
 
     @Override
-    public void save(Resume resume) {
+    public void save(Resume resume) {    // не меняется
             sqlHelper.transactionExecute(conn -> {
                         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)")) {
                             ps.setString(1, resume.getUuid());
@@ -64,7 +73,7 @@ public class SqlStorage implements Storage {
     }
 
     @Override
-    public void delete(String uuid) {
+    public void delete(String uuid) {   // не меняется
         sqlHelper.<Void>execute("DELETE FROM resume r WHERE r.uuid = (?)", preparedStatement -> {
             preparedStatement.setString(1, uuid);
             if (preparedStatement.executeUpdate() == 0) {
@@ -74,7 +83,7 @@ public class SqlStorage implements Storage {
         });
     }
 
-    @Override
+    @Override    // не меняется
     public Resume get(String uuid) {
         return sqlHelper.execute(""+
                 " SELECT * FROM resume r" +
@@ -97,12 +106,18 @@ public class SqlStorage implements Storage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        return sqlHelper.execute("SELECT * FROM resume ORDER BY full_name, uuid", preparedStatement -> {
+    public List<Resume> getAllSorted() {      // написать
+        return sqlHelper.execute("SELECT * FROM resume r LEFT JOIN contact c ON r.uuid = c.resume_uuid ORDER BY full_name, uuid  ", preparedStatement -> {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Resume> resumes = new ArrayList<>();
             while (resultSet.next()) {
-                resumes.add(new Resume(resultSet.getString("uuid"), resultSet.getString("full_name")));
+                Resume resume = new Resume(resultSet.getString("uuid"), resultSet.getString("full_name"));
+                do{
+                    String value = resultSet.getString("value");
+                    ContactType type = ContactType.valueOf(resultSet.getString("type"));
+                    resume.addContact(type, value);
+                } while (resultSet.next());
+                resumes.add(resume);
             }
             return resumes;
         });
