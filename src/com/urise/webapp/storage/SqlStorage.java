@@ -12,6 +12,7 @@ import org.postgresql.util.PSQLState;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -85,7 +86,7 @@ public class SqlStorage implements Storage {
 
     @Override    // не меняется
     public Resume get(String uuid) {
-        return sqlHelper.execute(""+
+        return sqlHelper.execute("" +
                 " SELECT * FROM resume r" +
                 "  LEFT JOIN contact c" +
                 "    ON r.uuid = c.resume_uuid" +
@@ -96,7 +97,7 @@ public class SqlStorage implements Storage {
                 throw new NotExistStorageException(uuid);
             }
             Resume resume = new Resume(uuid, resultSet.getString("full_name"));
-            do{
+            do {
                 String value = resultSet.getString("value");
                 if (value == null) {
                     break;
@@ -113,18 +114,18 @@ public class SqlStorage implements Storage {
         return sqlHelper.execute("SELECT * FROM resume r LEFT JOIN contact c ON r.uuid = c.resume_uuid ORDER BY full_name, uuid  ", preparedStatement -> {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Resume> resumes = new ArrayList<>();
-            while (resultSet.next()) {
-                Resume resume = new Resume(resultSet.getString("uuid"), resultSet.getString("full_name"));
-                do{
-                    String value = resultSet.getString("value");
-                    if (value == null){
-                        break;
-                    }
-                    ContactType type = ContactType.valueOf(resultSet.getString("type"));
-                    resume.addContact(type, value);
-                } while (resultSet.next());
+             while (resultSet.next()){
+            Resume resume = new Resume(resultSet.getString("uuid"), resultSet.getString("full_name"));
+            do {
+                String value = resultSet.getString("value");
+                if (value == null) {
+                    break;
+                }
+                ContactType type = ContactType.valueOf(resultSet.getString("type"));
+                resume.addContact(type, value);
                 resumes.add(resume);
-            }
+            } while (resultSet.next());
+               }
             return resumes;
         });
     }
