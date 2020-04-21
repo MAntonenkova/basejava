@@ -37,6 +37,10 @@ public class SqlStorage implements Storage {
                         preparedStatement.setString(2, resume.getUuid());
                         preparedStatement.execute();
                     }
+                    try (PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")) {
+                        preparedStatement.setString(1, resume.getUuid());
+                        preparedStatement.execute();
+                    }
                     try (PreparedStatement preparedStatement = conn.prepareStatement("UPDATE contact SET type = ?, value = ? WHERE resume_uuid = ?")) {
                         for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
                             preparedStatement.setString(1, e.getKey().name());
@@ -52,7 +56,7 @@ public class SqlStorage implements Storage {
     }
 
     @Override
-    public void save(Resume resume) {    // не меняется
+    public void save(Resume resume) {
         sqlHelper.transactionExecute(conn -> {
                     try (PreparedStatement ps = conn.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)")) {
                         ps.setString(1, resume.getUuid());
@@ -74,7 +78,7 @@ public class SqlStorage implements Storage {
     }
 
     @Override
-    public void delete(String uuid) {   // не меняется
+    public void delete(String uuid) {
         sqlHelper.<Void>execute("DELETE FROM resume r WHERE r.uuid = (?)", preparedStatement -> {
             preparedStatement.setString(1, uuid);
             if (preparedStatement.executeUpdate() == 0) {
@@ -84,7 +88,7 @@ public class SqlStorage implements Storage {
         });
     }
 
-    @Override    // не меняется
+    @Override
     public Resume get(String uuid) {
         return sqlHelper.execute("" +
                 " SELECT * FROM resume r" +
@@ -114,18 +118,18 @@ public class SqlStorage implements Storage {
         return sqlHelper.execute("SELECT * FROM resume r LEFT JOIN contact c ON r.uuid = c.resume_uuid ORDER BY full_name, uuid  ", preparedStatement -> {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Resume> resumes = new ArrayList<>();
-             while (resultSet.next()){
-            Resume resume = new Resume(resultSet.getString("uuid"), resultSet.getString("full_name"));
-            do {
-                String value = resultSet.getString("value");
-                if (value == null) {
-                    break;
+            while (resultSet.next()) {
+                Resume resume = new Resume(resultSet.getString("uuid"), resultSet.getString("full_name"));
+                for (int i =0; i < resultSet.getFetchSize(); i++){
+                    String value = resultSet.getString("value");
+                    if (value == null) {
+                        break;
+                    }
+                    ContactType type = ContactType.valueOf(resultSet.getString("type"));
+                    resume.addContact(type, value);
                 }
-                ContactType type = ContactType.valueOf(resultSet.getString("type"));
-                resume.addContact(type, value);
                 resumes.add(resume);
-            } while (resultSet.next());
-               }
+            }
             return resumes;
         });
     }
