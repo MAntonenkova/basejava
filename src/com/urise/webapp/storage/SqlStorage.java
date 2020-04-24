@@ -11,10 +11,7 @@ import org.postgresql.util.PSQLException;
 import org.postgresql.util.PSQLState;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
@@ -118,22 +115,35 @@ public class SqlStorage implements Storage {
         return sqlHelper.execute("SELECT * FROM resume r LEFT JOIN contact c ON r.uuid = c.resume_uuid ORDER BY full_name, uuid  ", preparedStatement -> {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Resume> resumes = new ArrayList<>();
+            Map<String, Resume> resumesFromDb = new HashMap<>();
+
             while (resultSet.next()) {
-                Resume resume = new Resume(resultSet.getString("uuid"), resultSet.getString("full_name"));
-                for (int i =0; i < resultSet.getFetchSize(); i++){
-                    String value = resultSet.getString("value");
-                    if (value == null) {
-                        break;
+                String uuid = resultSet.getString("uuid");
+                String fullName = resultSet.getString("full_name");
+
+                String value = resultSet.getString("value");
+                if (value == null) {
+                    if (!resumesFromDb.containsKey(uuid)){
+                        Resume resume = new Resume(uuid, fullName);   // создаем его
+                        resumesFromDb.put(uuid, resume);
+                        resumes.add(resume);
                     }
-                    ContactType type = ContactType.valueOf(resultSet.getString("type"));
-                    resume.addContact(type, value);
+                    break;
                 }
-                resumes.add(resume);
+                ContactType type = ContactType.valueOf(resultSet.getString("type"));
+
+                if (!resumesFromDb.containsKey(uuid)) {  // если в базе нет такого резюме
+                    Resume resume = new Resume(uuid, fullName);   // создаем его
+                    resume.getContacts().put(type, value);       // кидаем туда контакт
+                    resumesFromDb.put(uuid, resume);              // кидаем его в нашу карту маркер
+                    resumes.add(resume);
+                } else {                           // если в базе есть резюме
+                    resumesFromDb.get(uuid).getContacts().put(type, value);
+                }
             }
             return resumes;
         });
     }
-
     @Override
     public int getSize() {
         return sqlHelper.execute("SELECT COUNT(*) FROM resume ", preparedStatement -> {
