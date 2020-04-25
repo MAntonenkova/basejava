@@ -126,7 +126,7 @@ public class SqlStorage implements Storage {
                     if (!resumesFromDb.containsKey(uuid)){
                         Resume resume = new Resume(uuid, fullName);   // создаем его
                         resumesFromDb.put(uuid, resume);
-                        resumes.add(resume);
+                   //     resumes.add(resume);
                     }
                     break;
                 }
@@ -136,12 +136,14 @@ public class SqlStorage implements Storage {
                     Resume resume = new Resume(uuid, fullName);   // создаем его
                     resume.getContacts().put(type, value);       // кидаем туда контакт
                     resumesFromDb.put(uuid, resume);              // кидаем его в нашу карту маркер
-                    resumes.add(resume);
+                   // resumes.add(resume);
                 } else {                           // если в базе есть резюме
                     resumesFromDb.get(uuid).getContacts().put(type, value);
                 }
+
             }
-            return resumes;
+          //  return resumes;
+            return new ArrayList<>(resumesFromDb.values());
         });
     }
     @Override
