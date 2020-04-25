@@ -120,32 +120,33 @@ public class SqlStorage implements Storage {
             while (resultSet.next()) {
                 String uuid = resultSet.getString("uuid");
                 String fullName = resultSet.getString("full_name");
-
                 String value = resultSet.getString("value");
-                if (value == null) {
-                    if (!resumesFromDb.containsKey(uuid)){
-                        Resume resume = new Resume(uuid, fullName);   // создаем его
-                        resumesFromDb.put(uuid, resume);
-                   //     resumes.add(resume);
+                if (value !=null){
+                    ContactType type = ContactType.valueOf(resultSet.getString("type"));
+                }
+
+
+                if (resumesFromDb.containsKey(uuid)) {         // если в базе уже есть это резюме
+                    if (value != null) {                         // если контакт не нулевой
+                        ContactType type = ContactType.valueOf(resultSet.getString("type"));
+                        resumesFromDb.get(uuid).getContacts().put(type, value);     // кидаем в резюме которое уже в базе новый контакт
                     }
-                    break;
+                } else if (!resumesFromDb.containsKey(uuid)) {  // если в базе нет такого резюме
+                    resumesFromDb.computeIfAbsent(uuid, b -> new Resume(uuid, fullName));
+                  Resume resume = new Resume(uuid, fullName);   // создаем новое резюме
+                    if (value != null) {                              // если контакт не нулевой
+                        ContactType type = ContactType.valueOf(resultSet.getString("type"));
+                        resume.getContacts().put(type, value);       // кидаем в резюме новый контакт
+                    }
+                    resumesFromDb.put(uuid, resume);              // в любом случае кидаем новое резюме в нашу карту маркер
+                     resumes.add(resume);
                 }
-                ContactType type = ContactType.valueOf(resultSet.getString("type"));
-
-                if (!resumesFromDb.containsKey(uuid)) {  // если в базе нет такого резюме
-                    Resume resume = new Resume(uuid, fullName);   // создаем его
-                    resume.getContacts().put(type, value);       // кидаем туда контакт
-                    resumesFromDb.put(uuid, resume);              // кидаем его в нашу карту маркер
-                   // resumes.add(resume);
-                } else {                           // если в базе есть резюме
-                    resumesFromDb.get(uuid).getContacts().put(type, value);
-                }
-
             }
-          //  return resumes;
-            return new ArrayList<>(resumesFromDb.values());
+              return resumes;
+        //    return new ArrayList<>(resumesFromDb.values());
         });
     }
+
     @Override
     public int getSize() {
         return sqlHelper.execute("SELECT COUNT(*) FROM resume ", preparedStatement -> {
