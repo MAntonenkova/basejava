@@ -11,7 +11,7 @@ alter table resume
 
 create table contact
 (
-    id        serial   not null
+    id        serial
         constraint contact_pk
             primary key,
 
@@ -26,8 +26,7 @@ create table contact
 alter table contact
     owner to postgres;
 
-create unique index contact__uuid_type_index
-    on contact (resume_id, type);
+
 
 
 

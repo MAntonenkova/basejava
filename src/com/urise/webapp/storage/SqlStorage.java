@@ -1,14 +1,9 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.sql.ConnectionFactory;
 import com.urise.webapp.sql.SqlHelper;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
 
 import java.sql.*;
 import java.util.*;
@@ -25,24 +20,24 @@ public class SqlStorage implements Storage {
         sqlHelper.execute("DELETE FROM resume;");
     }
 
-
     @Override
     public void update(Resume resume) {    // не меняется
         sqlHelper.transactionExecute(conn -> {
-                    try (PreparedStatement preparedStatement = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
-                        preparedStatement.setString(1, resume.getFullName());
-                        preparedStatement.setString(2, resume.getUuid());
-                        preparedStatement.execute();
-                    }
-                    try (PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")) {
+                    try (PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM resume WHERE uuid = ?")) {
                         preparedStatement.setString(1, resume.getUuid());
                         preparedStatement.execute();
                     }
-                    try (PreparedStatement preparedStatement = conn.prepareStatement("UPDATE contact SET type = ?, value = ? WHERE resume_uuid = ?")) {
+                    try (PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO resume VALUES (?, ?)")) {
+                        preparedStatement.setString(1, resume.getUuid());
+                        preparedStatement.setString(2, resume.getFullName());
+                        preparedStatement.execute();
+                    }
+                    try (PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES\n" +
+                            "(?, ?, ?) ")) {
                         for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
-                            preparedStatement.setString(1, e.getKey().name());
-                            preparedStatement.setString(2, e.getValue());
-                            preparedStatement.setString(3, resume.getUuid());
+                            preparedStatement.setString(2, e.getKey().name());
+                            preparedStatement.setString(3, e.getValue());
+                            preparedStatement.setString(1, resume.getUuid());
                             preparedStatement.addBatch();
                         }
                         preparedStatement.executeBatch();
@@ -114,36 +109,21 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {      // написать
         return sqlHelper.execute("SELECT * FROM resume r LEFT JOIN contact c ON r.uuid = c.resume_uuid ORDER BY full_name, uuid  ", preparedStatement -> {
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<Resume> resumes = new ArrayList<>();
-            Map<String, Resume> resumesFromDb = new HashMap<>();
+            Map<String, Resume> resumesFromDb = new LinkedHashMap<>();
 
             while (resultSet.next()) {
                 String uuid = resultSet.getString("uuid");
                 String fullName = resultSet.getString("full_name");
                 String value = resultSet.getString("value");
-                if (value !=null){
+
+                Resume resume = resumesFromDb.computeIfAbsent(uuid, b -> new Resume(uuid, fullName));
+                if (value != null) {
                     ContactType type = ContactType.valueOf(resultSet.getString("type"));
-                }
-
-
-                if (resumesFromDb.containsKey(uuid)) {         // если в базе уже есть это резюме
-                    if (value != null) {                         // если контакт не нулевой
-                        ContactType type = ContactType.valueOf(resultSet.getString("type"));
-                        resumesFromDb.get(uuid).getContacts().put(type, value);     // кидаем в резюме которое уже в базе новый контакт
-                    }
-                } else if (!resumesFromDb.containsKey(uuid)) {  // если в базе нет такого резюме
-                    resumesFromDb.computeIfAbsent(uuid, b -> new Resume(uuid, fullName));
-                  Resume resume = new Resume(uuid, fullName);   // создаем новое резюме
-                    if (value != null) {                              // если контакт не нулевой
-                        ContactType type = ContactType.valueOf(resultSet.getString("type"));
-                        resume.getContacts().put(type, value);       // кидаем в резюме новый контакт
-                    }
-                    resumesFromDb.put(uuid, resume);              // в любом случае кидаем новое резюме в нашу карту маркер
-                     resumes.add(resume);
+                    resume.getContacts().put(type, value);
                 }
             }
-              return resumes;
-        //    return new ArrayList<>(resumesFromDb.values());
+
+            return new ArrayList<>(resumesFromDb.values());
         });
     }
 
