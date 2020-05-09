@@ -1,9 +1,7 @@
 create table resume
 (
-    uuid      char(36) not null
-        constraint resume_pk
-            primary key,
-    full_name text     not null
+                            uuid      char(36) not null  constraint resume_pk  primary key,
+                            full_name text     not null
 );
 
 alter table resume
@@ -11,20 +9,25 @@ alter table resume
 
 create table contact
 (
-    id        serial
-        constraint contact_pk
-            primary key,
-
-    resume_id char(36) not null
-        constraint contact____resume_uuid_fk
-            references resume
-            on update restrict on delete cascade,
-    type      text     not null,
-    value     text     not null
+                         id        serial constraint contact_pk  primary key,
+                         resume_id char(36) not null  constraint contact____resume_uuid_fk
+                                                                        references resume
+                                                                        on update restrict on delete cascade,
+                         type      text     not null,
+                         value     text     not null
 );
 
 alter table contact
     owner to postgres;
+
+CREATE TABLE section (
+                         id          SERIAL PRIMARY KEY,
+                         resume_uuid CHAR(36) NOT NULL REFERENCES resume (uuid) ON DELETE CASCADE,
+                         type        TEXT     NOT NULL,
+                         content     TEXT     NOT NULL
+);
+CREATE UNIQUE INDEX section_idx
+    ON section (resume_uuid, type);
 
 
 
