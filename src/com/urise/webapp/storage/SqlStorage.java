@@ -14,7 +14,13 @@ import java.util.*;
 public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
 
-    public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
+    public SqlStorage(String dbUrl, String dbUser, String dbPassword)  {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
+
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
@@ -133,7 +139,7 @@ public class SqlStorage implements Storage {
         });
     }
 
-    public void addContacts(ResultSet resultSet, Resume resume) throws SQLException {
+    private void addContacts(ResultSet resultSet, Resume resume) throws SQLException {
         String value = resultSet.getString("value");
         if (value != null) {
             ContactType contactType = ContactType.valueOf(resultSet.getString("type"));
@@ -141,7 +147,7 @@ public class SqlStorage implements Storage {
         }
     }
 
-    public void addSections(ResultSet resultSet, Resume resume) throws SQLException {
+    private void addSections(ResultSet resultSet, Resume resume) throws SQLException {
         String content = resultSet.getString("content");
         if (content != null) {
             SectionType sectionType = SectionType.valueOf(resultSet.getString("type"));

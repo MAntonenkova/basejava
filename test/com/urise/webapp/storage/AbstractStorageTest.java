@@ -40,7 +40,6 @@ public abstract class AbstractStorageTest {
     protected Path path;
 
 
-
     AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
@@ -74,14 +73,6 @@ public abstract class AbstractStorageTest {
         storage.update(newResume);
         assertTrue(newResume.equals(storage.get(UUID_1)));
     }
-
-/*    @Test
-    public void update() throws Exception {
-        Resume newResume = new Resume(UUID_1, "New Name");
-        newResume.addContact(ContactType.SKYPE, "skype");
-        storage.update(newResume);
-        assertTrue(newResume.equals(storage.get(UUID_1)));
-    }*/
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExist() throws Exception {

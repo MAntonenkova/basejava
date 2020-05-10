@@ -1,5 +1,12 @@
 package com.urise.webapp.web;
 
+import com.urise.webapp.Config;
+import com.urise.webapp.model.ContactType;
+import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.Storage;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,6 +15,14 @@ import java.io.PrintWriter;
 import java.io.Writer;
 
 public class ResumeServlet extends HttpServlet {
+    private Storage storage; //  = Config.get().getStorage();
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init();
+        storage = Config.get().getStorage();
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
 
     }
@@ -16,8 +31,9 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-      //  String name = request.getParameter("name");
-        String tableOutput = ("<html>\n" +
+        Writer writer = response.getWriter();
+        //  String name = request.getParameter("name");
+        writer.write("<html>\n" +
                 "<head>\n" +
                 "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
                 "<link rel=\"stylesheet\" href=\"basejava/web/css/style.css\">\n" +
@@ -29,13 +45,26 @@ public class ResumeServlet extends HttpServlet {
                 "<tr bgcolor = \"#66CDAA \">\n" +
                 "<th>№</th>\n" +
                 "<th>Имя</th>\n" +
-                "</tr>\n" +
-                "<tr></tr>\n" +
+                "</tr>\n");
+
+        for (Resume resume : storage.getAllSorted()) {
+            writer.write(
+                    "<tr>\n" +
+                            "     <td><a href=\"resume?uuid=" + resume.getUuid() + "\">" + resume.getFullName() + "</a></td>\n" +
+                            "     <td>" + resume.getContact(ContactType.MAIL) + "</td>\n" +
+                            "</tr>\n");
+        }
+        writer.write("</table>\n" +
+                "</section>\n" +
+                "</body>\n" +
+                "</html>\n");
+
+       /*             "<tr></tr>\n" +
                 "</table>\n" +
                 "</section>\n" +
                 "</body>\n" +
                 "</html>");
        // response.getWriter().write(name == null ? "Hello, here I am! Yours, resumes" : "Hello " + name + ", here I am! Yours, resumes");
-        response.getWriter().write(tableOutput);
+        response.getWriter().write(tableOutput);*/
     }
 }

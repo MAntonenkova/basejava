@@ -24,10 +24,7 @@ public class JsonParserTest {
         Section section1 = new TextSection("Objective1");
         String json = JsonParser.write(section1, Section.class);
         System.out.println(json);
-        Section section2 = JsonParser.read(json, Section.class );
+        Section section2 = JsonParser.read(json, Section.class);
         Assert.assertEquals(section1, section2);
     }
-
-
-    // TODO 25.13 min video
 }
