@@ -16,62 +16,56 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
             dataOutputStream.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContacts();
 
-            writeCollection(contacts.entrySet(), dataOutputStream, new elementWriter<Map.Entry<ContactType, String>>() {
-                @Override
-                public void write(Map.Entry<ContactType, String> contactTypeStringEntry) throws IOException {
-                    dataOutputStream.writeUTF(contactTypeStringEntry.getKey().name());
-                    dataOutputStream.writeUTF(contactTypeStringEntry.getValue());
-                }
+            writeCollection(contacts.entrySet(), dataOutputStream, contactTypeStringEntry -> {
+                dataOutputStream.writeUTF(contactTypeStringEntry.getKey().name());
+                dataOutputStream.writeUTF(contactTypeStringEntry.getValue());
             });
             Map<SectionType, Section> sections = resume.getSections();
 
-            writeCollection(sections.entrySet(), dataOutputStream, new elementWriter<Map.Entry<SectionType, Section>>() {
-                @Override
-                public void write(Map.Entry<SectionType, Section> sectionTypeSectionEntry) throws IOException {
-                    SectionType key = sectionTypeSectionEntry.getKey();
-                    Section value = sectionTypeSectionEntry.getValue();
+            writeCollection(sections.entrySet(), dataOutputStream, sectionTypeSectionEntry -> {
+                SectionType key = sectionTypeSectionEntry.getKey();
+                Section value = sectionTypeSectionEntry.getValue();
 
-                    dataOutputStream.writeUTF(key.name());
+                dataOutputStream.writeUTF(key.name());
 
-                    switch (key) {
-                        case PERSONAL:
-                        case OBJECTIVE: {
-                            dataOutputStream.writeUTF(((TextSection) value).getContent());
-                        }
-                        break;
-                        case ACHIEVEMENT:
-                        case QUALIFICATIONS: {
-                            List<String> items = ((ListSection) value).getItems();
-                            writeCollection(items, dataOutputStream, dataOutputStream::writeUTF);
-                        }
-                        break;
-                        case EXPERIENCE:
-                        case EDUCATION: {
-                            List<Organization> organizations = ((OrganizationSection) value).getOrganizations();
-                            writeCollection(organizations, dataOutputStream, organization -> {
-                                Link homepage = organization.getHomePage();                         // получаем элементы этого класса, Link и лист <Position>
-                                List<Organization.Position> positions = organization.getPositions();    // получаем лист, где содержатся элементы: класс Organization
-                                String name = homepage.getName();
-                                String url = homepage.getUrl();
-                                dataOutputStream.writeUTF(name);                 // 3.4 пишем name из Link
-                                writeCheckNullString(dataOutputStream, url);    // 3.5 пишем url
+                switch (key) {
+                    case PERSONAL:
+                    case OBJECTIVE: {
+                        dataOutputStream.writeUTF(((TextSection) value).getContent());
+                    }
+                    break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS: {
+                        List<String> items = ((ListSection) value).getItems();
+                        writeCollection(items, dataOutputStream, dataOutputStream::writeUTF);
+                    }
+                    break;
+                    case EXPERIENCE:
+                    case EDUCATION: {
+                        List<Organization> organizations = ((OrganizationSection) value).getOrganizations();
+                        writeCollection(organizations, dataOutputStream, organization -> {
+                            Link homepage = organization.getHomePage();
+                            List<Organization.Position> positions = organization.getPositions();
+                            String name = homepage.getName();
+                            String url = homepage.getUrl();
+                            dataOutputStream.writeUTF(name);
+                            writeCheckNullString(dataOutputStream, url);
 
-                                writeCollection(positions, dataOutputStream, position -> {
+                            writeCollection(positions, dataOutputStream, position -> {
 
-                                    int startYear = position.getStartDate().getYear();
-                                    int startMonth = position.getStartDate().getMonthValue();
-                                    int endYear = position.getEndDate().getYear();
-                                    int endMonth = position.getEndDate().getMonthValue();
-                                    String title = position.getTitle();
-                                    String description = position.getDescription();
+                                int startYear = position.getStartDate().getYear();
+                                int startMonth = position.getStartDate().getMonthValue();
+                                int endYear = position.getEndDate().getYear();
+                                int endMonth = position.getEndDate().getMonthValue();
+                                String title = position.getTitle();
+                                String description = position.getDescription();
 
-                                    writeDate(dataOutputStream, startYear, startMonth);
-                                    writeDate(dataOutputStream, endYear, endMonth);   // 3.9 пишем endYear   // 3.10 пишем endMonth
-                                    writeCheckNullString(dataOutputStream, title);   // 3.11 пишем title
-                                    writeCheckNullString(dataOutputStream, description);   // 3.12 пишем desctiption
-                                });
+                                writeDate(dataOutputStream, startYear, startMonth);
+                                writeDate(dataOutputStream, endYear, endMonth);
+                                writeCheckNullString(dataOutputStream, title);
+                                writeCheckNullString(dataOutputStream, description);
                             });
-                        }
+                        });
                     }
                 }
             });
@@ -109,26 +103,20 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
             String uuid = dataInputStream.readUTF();
             String fullName = dataInputStream.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            readMain(dataInputStream, new ElementMain() {
-                @Override
-                public void read() throws IOException {
-                    resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
-                }
-            });
-
+            readMain(dataInputStream, () -> resume.setContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF()));
 
             readMain(dataInputStream, () -> {
                 String keyName = dataInputStream.readUTF();
                 switch (keyName) {
                     case "PERSONAL":
                     case "OBJECTIVE":
-                        resume.addSection(SectionType.valueOf(keyName), new TextSection(dataInputStream.readUTF()));
+                        resume.setSection(SectionType.valueOf(keyName), new TextSection(dataInputStream.readUTF()));
                         break;
 
                     case "ACHIEVEMENT":
                     case "QUALIFICATIONS":
                         List<String> items = new ArrayList<>();
-                        resume.addSection(SectionType.valueOf(keyName), new ListSection(items));
+                        resume.setSection(SectionType.valueOf(keyName), new ListSection(items));
                         readCollection(items, dataInputStream, dataInputStream::readUTF);
                         break;
                     case "EXPERIENCE":
@@ -153,7 +141,7 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
 
                             return new Organization(homepage, positions);
                         });
-                        resume.addSection(SectionType.valueOf(keyName), new OrganizationSection(organizations));
+                        resume.setSection(SectionType.valueOf(keyName), new OrganizationSection(organizations));
                         break;
                 }
             });

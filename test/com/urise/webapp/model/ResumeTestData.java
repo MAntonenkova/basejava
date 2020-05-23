@@ -78,15 +78,6 @@ public class ResumeTestData {
         positions.add(position4);
         positions.add(position5);
 
-          /*         public Organization(String name, String url, Organization.Position... positions) {
-            this(new Link(name, url), Arrays.asList(positions));
-        }
-
-    public Organization(Link homePage, List< Organization.Position > positions) {
-            this.homePage = homePage;
-            this.positions = positions;
-        }*/
-
         Organization education1 = new Organization("Заочная физико-техническая школа при МФТИ",
                 "http://www.school.mipt.ru/", new Organization.Position(LocalDate.of(1987, 9, 1),
                 LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)",
@@ -119,9 +110,9 @@ public class ResumeTestData {
         contacts.put(ContactType.PHONE, "+7(921) 855-0482");
         contacts.put(ContactType.SKYPE, "grigory.kislin");
         contacts.put(ContactType.MAIL, "gkislin@yandex.ru");
-        contacts.put(ContactType.LINKEDINPROFIL, "https://www.linkedin.com/in/gkislin");
-        contacts.put(ContactType.GITHUBPROFIL, "https://github.com/gkislin");
-        contacts.put(ContactType.STACKOVERFLOWPROFIL, "https://stackoverflow.com/users/548473/grigory-kislin");
+        contacts.put(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        contacts.put(ContactType.GITHUB, "https://github.com/gkislin");
+        contacts.put(ContactType.STATCKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
         contacts.put(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
         System.out.println(resume);

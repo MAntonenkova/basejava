@@ -18,7 +18,9 @@ import static com.urise.webapp.util.DateUtil.of;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
-    private static final long serialVersionUID =1L;
+    private static final long serialVersionUID = 1L;
+
+    public static final Organization EMPTY = new Organization("", "", Position.EMPTY);
 
     private Link homePage;
     private List<Position> positions = new ArrayList<>();
@@ -62,13 +64,9 @@ public class Organization implements Serializable {
         return "Organization(" + homePage + "," + positions + ')';
     }
 
-    /**
-     * gkislin
-     * 28.07.2016
-     */
-
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
+        public static final Position EMPTY = new Position();
 
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate startDate;
@@ -85,7 +83,7 @@ public class Organization implements Serializable {
             this(of(startYear, startMonth), of(endYear, endMonth), title, description);
         }
 
-        public Position() {
+        Position() {
         }
 
         public Position(LocalDate startDate, LocalDate endDate, String title, String description) {
@@ -95,7 +93,7 @@ public class Organization implements Serializable {
             this.startDate = startDate;
             this.endDate = endDate;
             this.title = title;
-            this.description = description;
+            this.description = description == null ? "" : description;
         }
 
         public LocalDate getStartDate() {
