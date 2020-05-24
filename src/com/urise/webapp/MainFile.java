@@ -35,30 +35,30 @@ public class MainFile {
 
     private static void printDirectoryDeeply(File fileOrDir) {
         File[] list = fileOrDir.listFiles();
-        int countFile =0;
-        int countDir =0;
+        int countFile = 0;
+        int countDir = 0;
         String spacebar = "    ";
         if (list != null) {
             for (File eachFile : list) {
 
                 if (eachFile.isDirectory()) {
                     doSpace(countDir);
-                    countDir ++;
+                    countDir++;
                     System.out.println("Directory: " + eachFile.getName());
                     printDirectoryDeeply(eachFile);
                 } else if (eachFile.isFile()) {
                     doSpace(countFile);
-                    countFile ++;
+                    countFile++;
                     System.out.println(spacebar + "File: " + eachFile.getName());
                 }
             }
         }
     }
 
-    private static void doSpace(int count){
+    private static void doSpace(int count) {
         StringBuilder builder = new StringBuilder();
         String spacebar = "   ";
-        for (int i =0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             builder.append(spacebar);
         }
         System.out.print(builder);

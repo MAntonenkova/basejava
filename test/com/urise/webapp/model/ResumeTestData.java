@@ -2,13 +2,12 @@ package com.urise.webapp.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public class ResumeTestData {
     public static void main(String[] args) {
-        Resume resume = new Resume("Григорий Кислин");
+        Resume resume = new Resume("Федор Гришин");
 
         List<String> achievementsList = new ArrayList<>();
         achievementsList.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", " +
@@ -40,8 +39,6 @@ public class ResumeTestData {
         qualificationsList.add("MySQL, SQLite, MS SQL, HSQLDB  ");
 
         List<Organization> experienceList = new ArrayList<>();
-
-
 
         Organization.Position position1 = new Organization.Position(LocalDate.of(1997, 9, 1),
                 LocalDate.of(2005, 1, 1), "Инженер по аппаратному и программному тестированию",
@@ -83,16 +80,16 @@ public class ResumeTestData {
                 LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)",
                 null));
 
-        Organization education2 = new Organization(new Link("Санкт-Петербургский национальный исследовательский университет" +
-                "информационных технологий, механики и оптики",
+        Organization education2 = new Organization(new Link("МГИЭМ Московский государственный институт" +
+                "электроники и математики",
                 "http://www.ifmo.ru/ru/"), positions);
 
         educationList.add(education1);
         educationList.add(education2);
 
         Map<SectionType, Section> sections = resume.getSections();
-        Section textClassPersonal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры. ");
-        Section textClassObjective = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+        Section textClassPersonal = new TextSection("Аналитический склад ума");
+        Section textClassObjective = new TextSection("Java разработчик");
         Section listClassAchievement = new ListSection(achievementsList);
         Section listClassQualifications = new ListSection(qualificationsList);
         Section listClassExperience = new OrganizationSection(experienceList);
@@ -107,13 +104,12 @@ public class ResumeTestData {
 
         Map<ContactType, String> contacts = resume.getContacts();
 
-        contacts.put(ContactType.PHONE, "+7(921) 855-0482");
-        contacts.put(ContactType.SKYPE, "grigory.kislin");
-        contacts.put(ContactType.MAIL, "gkislin@yandex.ru");
-        contacts.put(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        contacts.put(ContactType.GITHUB, "https://github.com/gkislin");
-        contacts.put(ContactType.STATCKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
-        contacts.put(ContactType.HOMEPAGE, "http://gkislin.ru/");
+        contacts.put(ContactType.PHONE, "+7(903) 123-4567");
+        contacts.put(ContactType.SKYPE, "fedor");
+        contacts.put(ContactType.MAIL, "f.grishin@gmail.ru");
+        contacts.put(ContactType.LINKEDIN, "https://www.linkedin.com");
+        contacts.put(ContactType.GITHUB, "https://github.com");
+        contacts.put(ContactType.STATCKOVERFLOW, "https://stackoverflow.com");
 
         System.out.println(resume);
     }

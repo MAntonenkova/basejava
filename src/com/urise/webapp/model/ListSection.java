@@ -8,15 +8,15 @@ import java.util.Objects;
 public class ListSection extends Section implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    static final ListSection EMPTY = new ListSection("");
+    public static final ListSection EMPTY = new ListSection("");
 
     private List<String> items;
 
-    public ListSection(String... items) {
-        this(Arrays.asList(items));
+    public ListSection() {
     }
 
-    public ListSection() {
+    public ListSection(String... items) {
+        this(Arrays.asList(items));
     }
 
     public ListSection(List<String> items) {
@@ -26,6 +26,11 @@ public class ListSection extends Section implements Serializable {
 
     public List<String> getItems() {
         return items;
+    }
+
+    @Override
+    public String toString() {
+        return items.toString();
     }
 
     @Override
@@ -41,12 +46,5 @@ public class ListSection extends Section implements Serializable {
     @Override
     public int hashCode() {
         return items.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "ListSection{" +
-                "content=" + items +
-                '}';
     }
 }

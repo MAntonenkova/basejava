@@ -3,6 +3,6 @@ package com.urise.webapp.util;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public interface SqlExecutor <T>  {
+public interface SqlExecutor<T> {
     T execute(PreparedStatement preparedStatement) throws SQLException;
 }

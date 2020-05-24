@@ -23,7 +23,7 @@ public class MainDate {
 
         LocalDate localDate = LocalDate.now();
         LocalTime localTime = LocalTime.now();
-        LocalDateTime localDateTime = LocalDateTime.of (localDate, localTime);
+        LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
 
         System.out.println(localDateTime);
 
@@ -31,7 +31,6 @@ public class MainDate {
         SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("DD.MM.YY");
         System.out.println(simpleDateFormat.format(date));
         System.out.println(simpleDateFormat2.format(date));
-
 
         System.out.println("******************");
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("DD.MM.YY");

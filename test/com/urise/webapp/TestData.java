@@ -17,7 +17,6 @@ public class TestData {
     public static final Resume R4;
 
 
-
     static {
         R1 = new Resume(UUID_1, "Name1");
         R2 = new Resume(UUID_2, "Name2");
@@ -44,7 +43,7 @@ public class TestData {
                         new Organization("Organization12", "http://Organization12.ru")));
         R2.setContact(ContactType.SKYPE, "skype2");
         R2.setContact(ContactType.PHONE, "22222");
-       R1.setSection(SectionType.EXPERIENCE,
+        R1.setSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Organization2", "http://Organization2.ru",
                                 new Organization.Position(2015, Month.JANUARY, "position1", "content1"))));

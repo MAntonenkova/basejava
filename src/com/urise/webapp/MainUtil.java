@@ -2,10 +2,9 @@ package com.urise.webapp;
 
 public class MainUtil {
     public static void main(String[] args) {
-        System.out.println(Integer.valueOf(-1) == Integer.valueOf(-1));
-        System.out.println(Integer.valueOf(-1) == new Integer(-1));
-        int result = getInt();
-        System.out.println(result);
+        System.out.println(Integer.valueOf(-1).equals(-1));
+        System.out.println(Integer.valueOf(-1).equals(-1));
+        System.out.println(getInt());
     }
 
     public static Integer getInt() {

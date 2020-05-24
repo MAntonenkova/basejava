@@ -10,10 +10,10 @@ public enum ContactType {
             return getTitle() + ": " + toLink("skype:" + value, value);
         }
     },
-    MAIL("Почта") {
+    MAIL("") {
         @Override
         public String toHtml0(String value) {
-            return getTitle() + ": " + toLink("mailto:" + value, value);
+            return getTitle() + "" + toLink("mailto:" + value, value);
         }
     },
     LINKEDIN("Профиль LinkedIn") {
@@ -34,7 +34,7 @@ public enum ContactType {
             return toLink(value);
         }
     },
-    HOMEPAGE("Домашняя страница") {
+    HOME_PAGE("Домашняя страница") {
         @Override
         public String toHtml0(String value) {
             return toLink(value);

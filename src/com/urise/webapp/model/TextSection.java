@@ -1,22 +1,18 @@
 package com.urise.webapp.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import java.io.Serializable;
 import java.util.Objects;
 
+public class TextSection extends Section {
+    private static final long serialVersionUID = 1L;
 
- public class TextSection extends Section implements Serializable {
-     private static final long serialVersionUID =1L;
-
-     static final TextSection EMPTY = new TextSection("");
+    public static final TextSection EMPTY = new TextSection("");
 
     private String content;
 
-     public TextSection() {
-     }
+    public TextSection() {
+    }
 
-     public TextSection(String content) {
+    public TextSection(String content) {
         Objects.requireNonNull(content, "content must be not empty");
         this.content = content;
     }
@@ -42,8 +38,6 @@ import java.util.Objects;
 
     @Override
     public String toString() {
-        return "TextSection{" +
-                "content='" + content + '\'' +
-                '}';
+        return content;
     }
 }

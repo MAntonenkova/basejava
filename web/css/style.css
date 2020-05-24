@@ -17,6 +17,7 @@ footer {
 p.left {
     text-align: center
 }
+
 dl {
     background: none repeat scroll 0 0 #FAFAFA;
     margin: 8px 0;
@@ -57,14 +58,5 @@ a[href^="https://stackoverflow.com"] {
     background: url(../img/add.png) no-repeat center left;
 }
 
-/*a[href^="https://www.linkedin.com"] {
-    padding-left: 20px !important;
-    background: url(../img/lin.png) no-repeat center left;
-}
-
-a[href*="github."] {
-    padding-left: 20px !important;
-    background: url(../img/gh.png) no-repeat center left;
-}*/
 
 

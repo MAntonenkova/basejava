@@ -13,10 +13,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * gkislin
- * 22.07.2016
- */
 public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
 
@@ -90,7 +86,6 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        //  return getFilesList().map(path -> doGet(path)).collect(Collectors.toList());
         return getFilesList().map(this::doGet).collect(Collectors.toList());
     }
 

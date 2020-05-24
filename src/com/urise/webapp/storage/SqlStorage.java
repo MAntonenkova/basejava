@@ -155,14 +155,6 @@ public class SqlStorage implements Storage {
         }
     }
 
-    public void setContacts(ResultSet resultSet, Resume resume) throws SQLException {
-        String value = resultSet.getString("value");
-        if (value != null) {
-            ContactType type = ContactType.valueOf(resultSet.getString("type"));
-            resume.setContact(type, value);
-        }
-    }
-
     @Override
     public int getSize() {
         return sqlHelper.execute("SELECT COUNT(*) FROM resume ", preparedStatement -> {
@@ -189,7 +181,7 @@ public class SqlStorage implements Storage {
                 ps.setString(1, r.getUuid());
                 ps.setString(2, e.getKey().name());
                 Section section = e.getValue();
-                ps.setString(3, JsonParser.write(section, Section.class));   // TODO!
+                ps.setString(3, JsonParser.write(section, Section.class));
                 ps.addBatch();
             }
             ps.executeBatch();

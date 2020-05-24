@@ -1,6 +1,5 @@
 package com.urise.webapp.storage.serializer;
 
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.*;
 import com.urise.webapp.util.XmlParser;
 
@@ -19,7 +18,6 @@ public class XmlStreamSerializer implements StreamSerializerStrategy {
     public void doWrite(Resume resume, OutputStream outputStream) throws IOException {
         try (Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
             xmlParser.marshall(resume, writer);
-            //  objectOutputStream.writeObject(resume);
         }
     }
 

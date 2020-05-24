@@ -12,7 +12,7 @@ import java.util.*;
 public class Resume implements Comparable<Resume>, Serializable {
     private static final long serialVersionUID = 1L;
 
-    private static final Resume EMPTY = new Resume();
+    public static final Resume EMPTY = new Resume();
 
     static {
         EMPTY.setSection(SectionType.OBJECTIVE, TextSection.EMPTY);

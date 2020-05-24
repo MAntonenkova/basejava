@@ -27,9 +27,6 @@ public class MainCollections {
 
         for (Resume r : collection) {
             System.out.println(r);
-            if (r.getUuid().equals(UUID_1)) {
-                //      collection.remove(r);
-            }
         }
         Iterator<Resume> iterator = collection.iterator();
         while (iterator.hasNext()) {

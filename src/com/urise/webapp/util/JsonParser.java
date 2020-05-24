@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.urise.webapp.model.Section;
 
-
 import java.io.Reader;
 import java.io.Writer;
 
